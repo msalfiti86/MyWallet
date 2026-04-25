@@ -1,0 +1,15 @@
+@page
+@{
+    ViewData["Title"] = "Organizations";
+}
+<section class="page-header"><div><h1>Organizations</h1><p>Manage KYC, suspension status, limits, bank account details, and Saudi national address records.</p></div><button class="btn btn-primary"><i class="bi bi-building-add"></i> Add organization</button></section>
+<section class="stats-grid">
+    <partial name="_PremiumStatCard" model='("Active", "24", "bi-buildings", "success")' />
+    <partial name="_PremiumStatCard" model='("Review", "5", "bi-search", "warning")' />
+    <partial name="_PremiumStatCard" model='("Suspended", "2", "bi-pause-circle", "danger")' />
+    <partial name="_PremiumStatCard" model='("Monthly Volume", "SAR 420000", "bi-graph-up", "info")' />
+</section>
+<section class="table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>Name</th><th>CR</th><th>Manager</th><th>KYC</th><th>Compliance</th><th>Actions</th></tr></thead><tbody>
+<tr><td>OpenWallet Main Organization</td><td>1010000000</td><td>OpenWallet Admin</td><td><span class="status-badge status-verified">Verified</span></td><td><span class="status-badge status-active">Normal</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit</button></td></tr>
+<tr><td>Riyadh Services Co.</td><td>1012223300</td><td>Noura Alharbi</td><td><span class="status-badge status-pending">Pending</span></td><td><span class="status-badge status-reviewrequired">ReviewRequired</span></td><td><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Suspend</button></td></tr>
+</tbody></table></div></section>

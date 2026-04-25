@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenWallet.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using OpenWallet.Areas.Identity.Data;
 namespace OpenWallet.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20260425153733_OpenWalletKsaSchema")]
+    partial class OpenWalletKsaSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -633,7 +636,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DailyTransferLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -684,7 +686,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MonthlyTransferLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("NationalAddressAdditionalNumber")
@@ -740,7 +741,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("SingleTransactionLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SuspensionReason")
@@ -932,7 +932,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1083,22 +1082,18 @@ namespace OpenWallet.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("ApprovalThreshold")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("DailyLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MonthlyLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("SingleLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("WalletType")
@@ -1437,7 +1432,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("AvailableBalance")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1452,15 +1446,12 @@ namespace OpenWallet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DailyLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("HoldBalance")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MonthlyLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("OrganizationId")
@@ -1473,7 +1464,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("rowversion");
 
                     b.Property<decimal>("SingleTransactionLimit")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Status")
@@ -1517,7 +1507,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("ApprovedAt")
@@ -1559,7 +1548,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("FeeAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("FlaggedAt")
@@ -1619,7 +1607,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("TransactionNumber")
@@ -1635,7 +1622,6 @@ namespace OpenWallet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("VatAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

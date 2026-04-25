@@ -1,0 +1,6 @@
+@model (string Label, string Value, string Icon, string Tone)
+<article class="stat-card @Model.Tone">
+    <i class="bi @Model.Icon"></i>
+    <span>@Model.Label</span>
+    <strong data-counter>@Model.Value</strong>
+</article>

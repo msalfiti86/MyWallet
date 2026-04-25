@@ -1,0 +1,35 @@
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: .55; }
+}
+
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+.wallet-content > * { animation: riseIn .45s ease both; }
+.panel-card, .table-card, .stat-card, .wallet-card { transition: transform .2s ease, box-shadow .2s ease; }
+.panel-card:hover, .table-card:hover, .stat-card:hover { transform: translateY(-3px); }
+.quick-actions button:hover, .btn-primary:hover { filter: brightness(1.04); transform: translateY(-1px); }
+.pulse-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: #22c55e;
+  animation: pulseDot 1.6s infinite;
+}
+.loader-ring {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 3px solid rgba(20,184,166,.24);
+  border-top-color: var(--ow-primary);
+  animation: spinRing .9s linear infinite;
+}

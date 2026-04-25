@@ -1,0 +1,4 @@
+@page
+@{ ViewData["Title"] = "Compliance"; }
+<section class="page-header"><div><h1>Compliance review queue</h1><p>Suspicious transactions, high-value transfers, failed KYC, repeated failed logins, and manual review items.</p></div><button class="btn btn-primary"><i class="bi bi-person-check"></i> Assign</button></section>
+<section class="table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>Source</th><th>Organization</th><th>Risk</th><th>Status</th><th>Assigned</th><th>Resolution</th></tr></thead><tbody><tr><td>High-value transaction</td><td>OpenWallet</td><td><span class="status-badge status-failed">High</span></td><td><span class="status-badge status-pending">Open</span></td><td>ComplianceOfficer</td><td><button class="btn btn-sm btn-outline-secondary">Resolve</button></td></tr></tbody></table></div></section>

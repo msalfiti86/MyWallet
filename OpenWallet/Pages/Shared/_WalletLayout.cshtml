@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OpenWallet KSA</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/wallet-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/wallet-animations.css" asp-append-version="true" />
+</head>
+<body class="wallet-body">
+    <div class="wallet-shell">
+        <partial name="_Sidebar" />
+        <div class="wallet-main">
+            <partial name="_Topbar" />
+            <main class="wallet-content" role="main">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <partial name="_ToastContainer" />
+    <partial name="_ConfirmModal" />
+    <partial name="_OtpModal" />
+    <partial name="_LoadingOverlay" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="~/js/wallet-ui.js" asp-append-version="true"></script>
+    <script src="~/js/wallet-charts.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

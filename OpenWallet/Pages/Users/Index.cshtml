@@ -1,0 +1,9 @@
+@page
+@{
+    ViewData["Title"] = "Users";
+}
+<section class="page-header"><div><h1>Users</h1><p>Invite managers and wallet users with strict organization isolation, KYC status, roles, and permission visibility.</p></div><button class="btn btn-primary"><i class="bi bi-person-plus"></i> Invite user</button></section>
+<section class="table-card"><div class="row g-2 mb-3"><div class="col-md-5"><input class="form-control" placeholder="Search by name, mobile, email, national ID" /></div><div class="col-md-3"><select class="form-select"><option>All roles</option><option>OrganizationManager</option><option>User</option></select></div><div class="col-md-3"><select class="form-select"><option>All KYC statuses</option><option>Verified</option><option>Pending</option></select></div></div><div class="table-responsive"><table class="data-table"><thead><tr><th>User</th><th>Organization</th><th>Role</th><th>Mobile</th><th>KYC</th><th>Status</th></tr></thead><tbody>
+<tr><td>OpenWallet Admin<br /><small class="text-muted">admin@openwallet.local</small></td><td>OpenWallet</td><td>SuperAdmin</td><td>+966500000000</td><td><span class="status-badge status-verified">Verified</span></td><td><span class="status-badge status-active">Active</span></td></tr>
+<tr><td>Fahad Manager<br /><small class="text-muted">fahad@example.com</small></td><td>Riyadh Services</td><td>OrganizationManager</td><td>0551234567</td><td><span class="status-badge status-pending">Pending</span></td><td><span class="status-badge status-active">Active</span></td></tr>
+</tbody></table></div></section>

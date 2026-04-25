@@ -4,3 +4,77 @@
 
 /.vs/OpenWallet.slnx/v18/.suo
 /.vs/OpenWallet.slnx/FileContentIndex/fbf8c4ae-cb84-4ee7-892b-59926f9386c1.vsidx
+################################################################################
+# Visual Studio / .NET Recommended GitIgnore
+################################################################################
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## User-specific projects (Visual Studio 2015 and below)
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+*.opendb
+
+## Visual Studio 2017/2019/2022 cache and settings
+.vs/
+
+## Build results
+[Dd]ebug/
+[Cc]heckout/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+## MSBuild and Intermediate files
+*.ilk
+*.exp
+*.lib
+*.pdb
+*.aps
+*.idb
+*.dep
+*.res
+*.tli
+*.tlh
+*.tmp
+*.rsp
+*.pgc
+*.pgd
+*.meta
+*.tlog
+*.gm
+
+## NuGet Packages
+*.nupkg
+# The packages folder can be ignored because they are restored on build
+**/packages/*
+!**/packages/build/
+
+## Publish output
+*.lastcodeanalysistimes
+*.publish.xml
+*.pubxml
+*.pubxml.user
+
+## SQL Server files (Keep your migrations, ignore the local DBs)
+*.mdf
+*.ldf
+*.ndf
+
+## OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Project specific - OpenWallet
+# (Add any specific temporary logs or local config files here)
+appsettings.Development.json

@@ -49,6 +49,7 @@ public class Organization
     public string UpdatedBy { get; set; } = string.Empty;
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
     public ICollection<UserCustom> Users { get; set; } = new List<UserCustom>();
     public ICollection<Wallet> Wallets { get; set; } = new List<Wallet>();
 }
@@ -61,6 +62,9 @@ public class Wallet
     public string? UserId { get; set; }
     public UserCustom? User { get; set; }
     public string WalletNumber { get; set; } = string.Empty;
+    public string AccountNumber { get; set; } = string.Empty;
+    public string VirtualIban { get; set; } = string.Empty;
+    public string BankName { get; set; } = "BSF Bank";
     public string WalletType { get; set; } = "Personal";
     public string Currency { get; set; } = "SAR";
     public decimal AvailableBalance { get; set; }
@@ -74,6 +78,9 @@ public class Wallet
     public string CreatedBy { get; set; } = "System";
     public DateTime? UpdatedAt { get; set; }
     public string UpdatedBy { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
 }
 
 public class WalletTransaction
@@ -97,6 +104,8 @@ public class WalletTransaction
     public string PaymentMethod { get; set; } = "Wallet";
     public string Category { get; set; } = "Other";
     public string ReferenceNumber { get; set; } = string.Empty;
+    public string VirtualIban { get; set; } = string.Empty;
+    public string BankName { get; set; } = string.Empty;
     public string ExternalProviderReference { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string FailureReason { get; set; } = string.Empty;
@@ -115,6 +124,11 @@ public class WalletTransaction
     public string UserAgent { get; set; } = string.Empty;
     public bool RequiresApproval { get; set; }
     public Guid? OriginalTransactionId { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public string UpdatedBy { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
 }
 
 public class Beneficiary
@@ -143,13 +157,77 @@ public class Beneficiary
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string CreatedBy { get; set; } = "System";
+    public DateTime? UpdatedAt { get; set; }
+    public string UpdatedBy { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
 }
 
-public class PaymentMethod { public Guid Id { get; set; } public Guid OrganizationId { get; set; } public string UserId { get; set; } = string.Empty; public string Type { get; set; } = "Card"; public string DisplayName { get; set; } = string.Empty; public string CardBrand { get; set; } = string.Empty; public string Last4 { get; set; } = string.Empty; public string CardExpiryMonth { get; set; } = string.Empty; public string CardExpiryYear { get; set; } = string.Empty; public string BankName { get; set; } = string.Empty; public string IbanMasked { get; set; } = string.Empty; public string ProviderToken { get; set; } = string.Empty; public bool IsDefault { get; set; } public bool IsActive { get; set; } = true; public DateTime CreatedAt { get; set; } = DateTime.UtcNow; }
+public class Lookup
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public Guid OrganizationId { get; set; }
+    public bool IsSystem { get; set; }
+    public bool IsActive { get; set; } = true;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string CreatedBy { get; set; } = "System";
+    public DateTime? UpdatedAt { get; set; }
+    public string UpdatedBy { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
+    public ICollection<LookupDetail> Details { get; set; } = new List<LookupDetail>();
+}
+
+public class LookupDetail
+{
+    public Guid Id { get; set; }
+    public Guid LookupId { get; set; }
+    public Lookup? Lookup { get; set; }
+    public string Code { get; set; } = string.Empty;
+    public string ValueEn { get; set; } = string.Empty;
+    public string ValueAr { get; set; } = string.Empty;
+    public int SortOrder { get; set; }
+    public bool IsActive { get; set; } = true;
+    public Guid OrganizationId { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string CreatedBy { get; set; } = "System";
+    public DateTime? UpdatedAt { get; set; }
+    public string UpdatedBy { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
+}
+
+public class VirtualAccount
+{
+    public Guid Id { get; set; }
+    public Guid OrganizationId { get; set; }
+    public string Iban { get; set; } = string.Empty;
+    public string AccountNumber { get; set; } = string.Empty;
+    public string BankName { get; set; } = "BSF Bank";
+    public bool IsUsed { get; set; }
+    public string? AssignedToUserId { get; set; }
+    public Guid? AssignedWalletId { get; set; }
+    public DateTime? AssignedAt { get; set; }
+    public bool IsActive { get; set; } = true;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string CreatedBy { get; set; } = "System";
+    public DateTime? UpdatedAt { get; set; }
+    public string UpdatedBy { get; set; } = string.Empty;
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
+}
+
+public class PaymentMethod { public Guid Id { get; set; } public Guid OrganizationId { get; set; } public string UserId { get; set; } = string.Empty; public string Type { get; set; } = "Card"; public string DisplayName { get; set; } = string.Empty; public string CardBrand { get; set; } = string.Empty; public string Last4 { get; set; } = string.Empty; public string CardExpiryMonth { get; set; } = string.Empty; public string CardExpiryYear { get; set; } = string.Empty; public string BankName { get; set; } = string.Empty; public string IbanMasked { get; set; } = string.Empty; public string ProviderToken { get; set; } = string.Empty; public bool IsDefault { get; set; } public bool IsActive { get; set; } = true; public DateTime CreatedAt { get; set; } = DateTime.UtcNow; public string CreatedBy { get; set; } = "System"; public DateTime? UpdatedAt { get; set; } public string UpdatedBy { get; set; } = string.Empty; public bool IsDeleted { get; set; } public DateTime? DeletedAt { get; set; } public string DeletedBy { get; set; } = string.Empty; }
 public class Permission { public Guid Id { get; set; } public string Name { get; set; } = string.Empty; public string GroupName { get; set; } = string.Empty; public string Description { get; set; } = string.Empty; }
 public class RolePermission { public Guid Id { get; set; } public string RoleId { get; set; } = string.Empty; public IdentityRole? Role { get; set; } public Guid PermissionId { get; set; } public Permission? Permission { get; set; } }
 public class UserPermission { public Guid Id { get; set; } public string UserId { get; set; } = string.Empty; public Guid PermissionId { get; set; } public Permission? Permission { get; set; } }
-public class UserInvitation { public Guid Id { get; set; } public Guid OrganizationId { get; set; } public string Email { get; set; } = string.Empty; public string MobileNumber { get; set; } = string.Empty; public string RoleName { get; set; } = "User"; public string InvitationToken { get; set; } = string.Empty; public string Status { get; set; } = "Pending"; public DateTime ExpiresAt { get; set; } = DateTime.UtcNow.AddDays(7); public string InvitedByUserId { get; set; } = string.Empty; public DateTime CreatedAt { get; set; } = DateTime.UtcNow; }
+public class UserInvitation { public Guid Id { get; set; } public Guid OrganizationId { get; set; } public string Email { get; set; } = string.Empty; public string MobileNumber { get; set; } = string.Empty; public string FirstNameEn { get; set; } = string.Empty; public string LastNameEn { get; set; } = string.Empty; public string FirstNameAr { get; set; } = string.Empty; public string LastNameAr { get; set; } = string.Empty; public string NationalIdOrIqama { get; set; } = string.Empty; public string IdType { get; set; } = "SaudiNationalId"; public string JobTitle { get; set; } = string.Empty; public string Department { get; set; } = string.Empty; public string City { get; set; } = string.Empty; public string PostalCode { get; set; } = string.Empty; public string RoleName { get; set; } = "User"; public string InvitationToken { get; set; } = string.Empty; public string Status { get; set; } = "Pending"; public DateTime ExpiresAt { get; set; } = DateTime.UtcNow.AddDays(7); public string InvitedByUserId { get; set; } = string.Empty; public DateTime CreatedAt { get; set; } = DateTime.UtcNow; }
 public class Notification { public Guid Id { get; set; } public string UserId { get; set; } = string.Empty; public Guid? OrganizationId { get; set; } public string Title { get; set; } = string.Empty; public string Body { get; set; } = string.Empty; public string Type { get; set; } = "Info"; public string Channel { get; set; } = "InApp"; public bool IsRead { get; set; } public DateTime? ReadAt { get; set; } public DateTime CreatedAt { get; set; } = DateTime.UtcNow; public string RelatedEntityType { get; set; } = string.Empty; public string RelatedEntityId { get; set; } = string.Empty; }
 public class NotificationTemplate { public Guid Id { get; set; } public string EventName { get; set; } = string.Empty; public string Channel { get; set; } = "InApp"; public string Subject { get; set; } = string.Empty; public string Body { get; set; } = string.Empty; public bool IsActive { get; set; } = true; }
 public class SystemSetting { public Guid Id { get; set; } public string GroupName { get; set; } = string.Empty; public string Key { get; set; } = string.Empty; public string Value { get; set; } = string.Empty; public bool IsEncrypted { get; set; } public string Description { get; set; } = string.Empty; public DateTime CreatedAt { get; set; } = DateTime.UtcNow; public DateTime? UpdatedAt { get; set; } }

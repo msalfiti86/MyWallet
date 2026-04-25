@@ -1,15 +1,32 @@
 @page
+@model OpenWallet.Pages.Organizations.IndexModel
 @{
-    ViewData["Title"] = "Organizations";
+    ViewData["Title"] = Model.Ar ? "المنظمات" : "Organizations";
 }
-<section class="page-header"><div><h1>Organizations</h1><p>Manage KYC, suspension status, limits, bank account details, and Saudi national address records.</p></div><button class="btn btn-primary"><i class="bi bi-building-add"></i> Add organization</button></section>
-<section class="stats-grid">
-    <partial name="_PremiumStatCard" model='("Active", "24", "bi-buildings", "success")' />
-    <partial name="_PremiumStatCard" model='("Review", "5", "bi-search", "warning")' />
-    <partial name="_PremiumStatCard" model='("Suspended", "2", "bi-pause-circle", "danger")' />
-    <partial name="_PremiumStatCard" model='("Monthly Volume", "SAR 420000", "bi-graph-up", "info")' />
+<section class="page-header">
+    <div><h1>@(Model.Ar ? "المنظمات" : "Organizations")</h1><p>@(Model.Ar ? "إدارة بيانات المنظمة والامتثال والحذف الناعم." : "Manage organization data, compliance, and soft deletion.")</p></div>
+    <a class="btn btn-primary" asp-page="Edit"><i class="bi bi-building-add"></i> @(Model.Ar ? "إضافة منظمة" : "Add organization")</a>
 </section>
-<section class="table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>Name</th><th>CR</th><th>Manager</th><th>KYC</th><th>Compliance</th><th>Actions</th></tr></thead><tbody>
-<tr><td>OpenWallet Main Organization</td><td>1010000000</td><td>OpenWallet Admin</td><td><span class="status-badge status-verified">Verified</span></td><td><span class="status-badge status-active">Normal</span></td><td><button class="btn btn-sm btn-outline-secondary">Edit</button></td></tr>
-<tr><td>Riyadh Services Co.</td><td>1012223300</td><td>Noura Alharbi</td><td><span class="status-badge status-pending">Pending</span></td><td><span class="status-badge status-reviewrequired">ReviewRequired</span></td><td><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Suspend</button></td></tr>
-</tbody></table></div></section>
+<section class="table-card">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead><tr><th>@(Model.Ar ? "الاسم" : "Name")</th><th>@(Model.Ar ? "النوع" : "Type")</th><th>@(Model.Ar ? "المدير" : "Manager")</th><th>KYC</th><th>@(Model.Ar ? "الامتثال" : "Compliance")</th><th>@(Model.Ar ? "إجراءات" : "Actions")</th></tr></thead>
+            <tbody>
+            @foreach (var org in Model.Organizations)
+            {
+                <tr>
+                    <td><strong>@(Model.Ar ? org.LegalNameAr : org.LegalNameEn)</strong><br /><small class="text-muted">@org.ShortName</small></td>
+                    <td>@await Model.LookupText("OrganizationType", org.OrganizationType)</td>
+                    <td>@org.ManagerFullName</td>
+                    <td><span class="status-badge status-@org.KycStatus.ToLowerInvariant()">@await Model.LookupText("KycStatus", org.KycStatus)</span></td>
+                    <td>@await Model.LookupText("ComplianceStatus", org.ComplianceStatus)</td>
+                    <td class="d-flex gap-2">
+                        <a class="btn btn-sm btn-outline-secondary" asp-page="Edit" asp-route-id="@org.Id">@(Model.Ar ? "تعديل" : "Edit")</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@org.Id"><button class="btn btn-sm btn-outline-danger">@(Model.Ar ? "حذف" : "Delete")</button></form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

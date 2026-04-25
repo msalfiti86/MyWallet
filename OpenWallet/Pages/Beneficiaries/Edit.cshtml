@@ -1,0 +1,20 @@
+@page "{id:guid?}"
+@model OpenWallet.Pages.Beneficiaries.EditModel
+@{ ViewData["Title"] = Model.Ar ? "مستفيد" : "Beneficiary"; }
+<section class="page-header"><div><h1>@(Model.Ar ? "بيانات المستفيد" : "Beneficiary details")</h1><p>@(Model.Ar ? "للاختبار استخدم رمز OTP 000000." : "For testing, use OTP code 000000.")</p></div><a class="btn btn-outline-secondary" asp-page="Index">@(Model.Ar ? "رجوع" : "Back")</a></section>
+<form method="post" class="panel-card">
+<input asp-for="Input.Id" type="hidden" />
+<div class="row g-3">
+<div class="col-md-4"><label class="form-label" asp-for="Input.BeneficiaryType"></label><select class="form-select" asp-for="Input.BeneficiaryType" asp-items="Model.Types"></select></div>
+<div class="col-md-4"><label class="form-label" asp-for="Input.Nickname"></label><input class="form-control" asp-for="Input.Nickname" /></div>
+<div class="col-md-4"><label class="form-label">OTP</label><input class="form-control" asp-for="Input.OtpCode" placeholder="000000" /></div>
+<div class="col-md-6"><label class="form-label" asp-for="Input.FullNameEn"></label><input class="form-control" asp-for="Input.FullNameEn" /></div>
+<div class="col-md-6"><label class="form-label" asp-for="Input.FullNameAr"></label><input class="form-control" asp-for="Input.FullNameAr" dir="rtl" /></div>
+<div class="col-md-4"><label class="form-label" asp-for="Input.MobileNumber"></label><input class="form-control" asp-for="Input.MobileNumber" /></div>
+<div class="col-md-4"><label class="form-label" asp-for="Input.Email"></label><input class="form-control" asp-for="Input.Email" /></div>
+<div class="col-md-4"><label class="form-label" asp-for="Input.WalletNumber"></label><input class="form-control" asp-for="Input.WalletNumber" /></div>
+<div class="col-md-6"><label class="form-label" asp-for="Input.BankName"></label><input class="form-control" asp-for="Input.BankName" /></div>
+<div class="col-md-6"><label class="form-label" asp-for="Input.Iban"></label><input class="form-control" asp-for="Input.Iban" /></div>
+</div>
+<button class="btn btn-primary mt-4">@(Model.Ar ? "حفظ" : "Save")</button>
+</form>

@@ -4,41 +4,101 @@
     ViewData["Title"] = "Register";
 }
 
-<section class="auth-shell">
+<section class="auth-shell register-shell">
     <article class="auth-hero">
         <div>
             <span class="brand-mark"><span class="brand-icon"><i class="bi bi-wallet2"></i></span><span><strong>OpenWallet</strong><small>KSA</small></span></span>
             <h1 class="display-5 fw-bold mt-5">Create an organization wallet workspace</h1>
-            <p class="lead mt-3">Register the organization and manager together, then continue into KYC, wallet setup, OTP-protected transfers, and permission-based operations.</p>
+            <p class="lead mt-3">A guided registration for organization details, manager identity, wallet security, and policy agreement.</p>
         </div>
-        <div class="wizard-steps"><span></span><span></span><span></span></div>
+        <div class="wizard-steps" data-register-progress><span class="active"></span><span></span><span></span></div>
     </article>
-    <article class="auth-card">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2 class="h4 fw-bold">Organization registration</h2>
-            <p class="text-muted">No user can be created without an organization.</p>
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="row g-3">
-                <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameEn"></label><input asp-for="Input.OrganizationLegalNameEn" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameAr"></label><input asp-for="Input.OrganizationLegalNameAr" class="form-control" dir="rtl" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationShortName"></label><input asp-for="Input.OrganizationShortName" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.CommercialRegistrationNumber"></label><input asp-for="Input.CommercialRegistrationNumber" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.FirstNameEn"></label><input asp-for="Input.FirstNameEn" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.LastNameEn"></label><input asp-for="Input.LastNameEn" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.Email"></label><input asp-for="Input.Email" class="form-control" autocomplete="username" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.MobileNumber"></label><input asp-for="Input.MobileNumber" class="form-control" placeholder="+9665XXXXXXXX" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.NationalIdOrIqama"></label><input asp-for="Input.NationalIdOrIqama" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.DateOfBirthGregorian"></label><input asp-for="Input.DateOfBirthGregorian" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.City"></label><input asp-for="Input.City" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.PostalCode"></label><input asp-for="Input.PostalCode" class="form-control" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.Password"></label><input asp-for="Input.Password" class="form-control" autocomplete="new-password" /></div>
-                <div class="col-md-6"><label class="form-label" asp-for="Input.ConfirmPassword"></label><input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" /></div>
+    <article class="auth-card register-card">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 class="h4 fw-bold mb-1">Organization registration</h2>
+                    <p class="text-muted mb-0">No user can be created without an organization.</p>
+                </div>
+                <span class="status-badge status-active" data-step-label>Step 1 of 3</span>
             </div>
-            <button id="registerSubmit" type="submit" class="btn btn-primary w-100 mt-4 py-3">Create organization and manager</button>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="register-step is-active" data-step="1">
+                <h3 class="h6 fw-bold mb-3">Organization information</h3>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameEn"></label><input asp-for="Input.OrganizationLegalNameEn" class="form-control" maxlength="120" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameAr"></label><input asp-for="Input.OrganizationLegalNameAr" class="form-control" maxlength="120" dir="rtl" /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationShortName"></label><input asp-for="Input.OrganizationShortName" class="form-control" maxlength="40" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.CommercialRegistrationNumber"></label><input asp-for="Input.CommercialRegistrationNumber" class="form-control" maxlength="10" pattern="\d{10}" required placeholder="10 digits" /></div>
+                </div>
+            </div>
+
+            <div class="register-step" data-step="2">
+                <h3 class="h6 fw-bold mb-3">Manager information</h3>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.FirstNameEn"></label><input asp-for="Input.FirstNameEn" class="form-control" maxlength="60" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.LastNameEn"></label><input asp-for="Input.LastNameEn" class="form-control" maxlength="60" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.Email"></label><input asp-for="Input.Email" class="form-control" autocomplete="username" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.MobileNumber"></label><input asp-for="Input.MobileNumber" class="form-control" maxlength="13" placeholder="+9665XXXXXXXX" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.NationalIdOrIqama"></label><input asp-for="Input.NationalIdOrIqama" class="form-control" maxlength="10" pattern="[12]\d{9}" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.IdType"></label><select asp-for="Input.IdType" asp-items="Model.IdTypes" class="form-select"></select></div>
+                    <div class="col-md-4"><label class="form-label" asp-for="Input.DateOfBirthGregorian"></label><input asp-for="Input.DateOfBirthGregorian" class="form-control" required /></div>
+                    <div class="col-md-4"><label class="form-label" asp-for="Input.City"></label><input asp-for="Input.City" class="form-control" maxlength="80" required /></div>
+                    <div class="col-md-4"><label class="form-label" asp-for="Input.PostalCode"></label><input asp-for="Input.PostalCode" class="form-control" maxlength="5" pattern="\d{5}" required /></div>
+                </div>
+            </div>
+
+            <div class="register-step" data-step="3">
+                <h3 class="h6 fw-bold mb-3">Security and agreement</h3>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.Password"></label><input asp-for="Input.Password" class="form-control" autocomplete="new-password" required /></div>
+                    <div class="col-md-6"><label class="form-label" asp-for="Input.ConfirmPassword"></label><input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" required /></div>
+                    <div class="col-12">
+                        <label class="form-check agreement-box">
+                            <input class="form-check-input" asp-for="Input.AcceptTerms" required />
+                            <span class="form-check-label">I accept the OpenWallet KSA terms, privacy policy, wallet agreement, and consent to audit logging for sensitive actions.</span>
+                        </label>
+                        <span asp-validation-for="Input.AcceptTerms" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button class="btn btn-outline-secondary flex-fill" type="button" data-register-prev disabled>Back</button>
+                <button class="btn btn-primary flex-fill" type="button" data-register-next>Next</button>
+                <button id="registerSubmit" type="submit" class="btn btn-primary flex-fill d-none">Create organization and manager</button>
+            </div>
         </form>
     </article>
 </section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            let step = 1;
+            const steps = [...document.querySelectorAll(".register-step")];
+            const progress = [...document.querySelectorAll("[data-register-progress] span")];
+            const prev = document.querySelector("[data-register-prev]");
+            const next = document.querySelector("[data-register-next]");
+            const submit = document.getElementById("registerSubmit");
+            const label = document.querySelector("[data-step-label]");
+            const show = () => {
+                steps.forEach(s => s.classList.toggle("is-active", Number(s.dataset.step) === step));
+                progress.forEach((p, i) => p.classList.toggle("active", i < step));
+                prev.disabled = step === 1;
+                next.classList.toggle("d-none", step === 3);
+                submit.classList.toggle("d-none", step !== 3);
+                label.textContent = `Step ${step} of 3`;
+            };
+            const validCurrent = () => {
+                const current = document.querySelector(`.register-step[data-step="${step}"]`);
+                return [...current.querySelectorAll("input,select")].every(i => i.reportValidity());
+            };
+            next.addEventListener("click", () => { if (validCurrent() && step < 3) { step += 1; show(); } });
+            prev.addEventListener("click", () => { if (step > 1) { step -= 1; show(); } });
+            show();
+        })();
+    </script>
 }

@@ -36,16 +36,65 @@ public class UserContext : IdentityDbContext<UserCustom, IdentityRole, string>
     public DbSet<RefundRequest> RefundRequests => Set<RefundRequest>();
     public DbSet<ComplianceReviewItem> ComplianceReviewItems => Set<ComplianceReviewItem>();
     public DbSet<TransactionCategory> TransactionCategories => Set<TransactionCategory>();
+    public DbSet<Lookup> Lookups => Set<Lookup>();
+    public DbSet<LookupDetail> LookupDetails => Set<LookupDetail>();
+    public DbSet<VirtualAccount> VirtualAccounts => Set<VirtualAccount>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         builder.Entity<UserCustom>()
+            .HasQueryFilter(u => !u.IsDeleted);
+
+        builder.Entity<UserCustom>()
             .HasOne(u => u.Organization)
             .WithMany(o => o.Users)
             .HasForeignKey(u => u.OrganizationId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Wallet>()
+            .HasQueryFilter(w => !w.IsDeleted);
+
+        builder.Entity<Organization>()
+            .HasQueryFilter(o => !o.IsDeleted);
+
+        builder.Entity<Beneficiary>()
+            .HasQueryFilter(b => !b.IsDeleted);
+
+        builder.Entity<WalletTransaction>()
+            .HasQueryFilter(t => !t.IsDeleted);
+
+        builder.Entity<Lookup>()
+            .HasQueryFilter(l => !l.IsDeleted);
+
+        builder.Entity<LookupDetail>()
+            .HasQueryFilter(d => !d.IsDeleted);
+
+        builder.Entity<VirtualAccount>()
+            .HasQueryFilter(v => !v.IsDeleted);
+
+        builder.Entity<Lookup>()
+            .HasIndex(l => l.Name)
+            .IsUnique();
+
+        builder.Entity<LookupDetail>()
+            .HasIndex(d => new { d.LookupId, d.Code })
+            .IsUnique();
+
+        builder.Entity<VirtualAccount>()
+            .HasIndex(v => v.Iban)
+            .IsUnique();
+
+        builder.Entity<VirtualAccount>()
+            .HasIndex(v => v.AccountNumber)
+            .IsUnique();
+
+        builder.Entity<LookupDetail>()
+            .HasOne(d => d.Lookup)
+            .WithMany(l => l.Details)
+            .HasForeignKey(d => d.LookupId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Wallet>()
             .HasIndex(w => w.WalletNumber)

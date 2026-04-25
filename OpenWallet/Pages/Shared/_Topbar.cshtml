@@ -1,23 +1,35 @@
+@using OpenWallet.Services
+@{
+    var isAr = Context.Request.Cookies["openwallet-lang"] == "ar";
+    var userName = User.Identity?.Name ?? "User";
+    var initials = string.Join("", userName.Split('@')[0].Split('.', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpperInvariant();
+    if (initials.Length == 0) initials = "OW";
+    if (initials.Length > 2) initials = initials[..2];
+}
 <header class="wallet-topbar">
     <button class="icon-button d-lg-none" type="button" data-wallet-sidebar><i class="bi bi-list"></i></button>
     <div class="topbar-title">
-        <span>OpenWallet Main Organization</span>
+        <span>@(isAr ? "المؤسسة الرئيسية للمحفظة المفتوحة" : "OpenWallet Main Organization")</span>
         <strong>SAR 84,250.00</strong>
     </div>
     <div class="topbar-actions">
-        <button class="chip-button" type="button" data-wallet-lang><i class="bi bi-translate"></i><span>EN / AR</span></button>
+        <button class="chip-button" type="button" data-wallet-lang><i class="bi bi-translate"></i><span>@(isAr ? "عربي / English" : "EN / AR")</span></button>
         <button class="icon-button" type="button" data-wallet-theme aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button>
         <button class="icon-button notification-button" type="button" aria-label="Notifications"><i class="bi bi-bell"></i><span></span></button>
         <div class="dropdown">
             <button class="profile-button" data-bs-toggle="dropdown" type="button">
-                <span>OW</span>
-                <strong>Admin</strong>
+                <span>@initials</span>
+                <strong>@userName</strong>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a></li>
-                <li><a class="dropdown-item" asp-page="/Settings/Index">Settings</a></li>
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">@(isAr ? "الملف الشخصي" : "Profile")</a></li>
+                <li><a class="dropdown-item" asp-page="/Settings/Index">@(isAr ? "الإعدادات" : "Settings")</a></li>
                 <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+                <li>
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post">
+                        <button class="dropdown-item" type="submit">@(isAr ? "تسجيل الخروج" : "Logout")</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>

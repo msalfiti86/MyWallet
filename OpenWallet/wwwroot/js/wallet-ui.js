@@ -18,6 +18,8 @@
     root.lang = next;
     root.dir = next === "ar" ? "rtl" : "ltr";
     localStorage.setItem("openwallet-lang", next);
+    document.cookie = `openwallet-lang=${next};path=/;max-age=31536000`;
+    window.location.reload();
   });
 
   document.querySelector("[data-wallet-sidebar]")?.addEventListener("click", () => {

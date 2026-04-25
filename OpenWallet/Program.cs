@@ -36,6 +36,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddAuthorization(options =>
 {
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
     foreach (var permission in OpenWalletConstants.Permissions)
     {
         options.AddPolicy(permission, policy => policy.Requirements.Add(new PermissionRequirement(permission)));
@@ -58,8 +62,25 @@ builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
+builder.Services.AddScoped<ILookupService, LookupService>();
+builder.Services.AddSingleton<IOtpService, OtpService>();
 builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Register");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/RegisterConfirmation");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ConfirmEmail");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ConfirmEmailChange");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ForgotPassword");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ForgotPasswordConfirmation");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ResetPassword");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ResetPasswordConfirmation");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ResendEmailConfirmation");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/LoginWith2fa");
+    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/AccessDenied");
+});
 
 var app = builder.Build();
 

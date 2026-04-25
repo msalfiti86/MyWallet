@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OpenWallet.Areas.Identity.Data;
 using OpenWallet.Services;
 
@@ -34,6 +35,7 @@ namespace OpenWallet.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly UserContext _dbContext;
         private readonly IWalletService _walletService;
+        private readonly ILookupService _lookupService;
 
         public RegisterModel(
             UserManager<UserCustom> userManager,
@@ -42,7 +44,8 @@ namespace OpenWallet.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             UserContext dbContext,
-            IWalletService walletService)
+            IWalletService walletService,
+            ILookupService lookupService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -52,6 +55,7 @@ namespace OpenWallet.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _dbContext = dbContext;
             _walletService = walletService;
+            _lookupService = lookupService;
         }
 
         /// <summary>
@@ -72,6 +76,7 @@ namespace OpenWallet.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public List<SelectListItem> IdTypes { get; set; } = new();
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -89,17 +94,21 @@ namespace OpenWallet.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
+            [StringLength(120, MinimumLength = 2)]
             [Display(Name = "Organization legal name")]
             public string OrganizationLegalNameEn { get; set; }
 
+            [StringLength(120)]
             [Display(Name = "Organization Arabic name")]
             public string OrganizationLegalNameAr { get; set; }
 
             [Required]
+            [StringLength(40, MinimumLength = 2)]
             [Display(Name = "Short name")]
             public string OrganizationShortName { get; set; }
 
             [Required]
+            [RegularExpression(@"^\d{10}$", ErrorMessage = "Commercial registration must be exactly 10 digits.")]
             [Display(Name = "Commercial registration number")]
             public string CommercialRegistrationNumber { get; set; }
 
@@ -109,14 +118,21 @@ namespace OpenWallet.Areas.Identity.Pages.Account
             public string MobileNumber { get; set; }
 
             [Required]
+            [RegularExpression(@"^[12]\d{9}$", ErrorMessage = "Saudi National ID or Iqama must be exactly 10 digits and start with 1 or 2.")]
             [Display(Name = "National ID or Iqama")]
             public string NationalIdOrIqama { get; set; }
 
             [Required]
+            [Display(Name = "ID type")]
+            public string IdType { get; set; }
+
+            [Required]
+            [StringLength(60, MinimumLength = 2)]
             [Display(Name = "First name")]
             public string FirstNameEn { get; set; }
 
             [Required]
+            [StringLength(60, MinimumLength = 2)]
             [Display(Name = "Last name")]
             public string LastNameEn { get; set; }
 
@@ -130,8 +146,13 @@ namespace OpenWallet.Areas.Identity.Pages.Account
             public string City { get; set; }
 
             [Required]
+            [RegularExpression(@"^\d{5}$", ErrorMessage = "Postal code must be exactly 5 digits.")]
             [Display(Name = "Postal code")]
             public string PostalCode { get; set; }
+
+            [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms, privacy policy, and wallet agreement.")]
+            [Display(Name = "Agreement")]
+            public bool AcceptTerms { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -158,12 +179,14 @@ namespace OpenWallet.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            await LoadLookupsAsync();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            await LoadLookupsAsync();
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -196,6 +219,7 @@ namespace OpenWallet.Areas.Identity.Pages.Account
                 user.MobileNumber = Input.MobileNumber;
                 user.PhoneNumber = Input.MobileNumber;
                 user.NationalIdOrIqama = Input.NationalIdOrIqama;
+                user.IdType = Input.IdType;
                 user.DateOfBirthGregorian = Input.DateOfBirthGregorian;
                 user.NationalAddressCity = Input.City;
                 user.NationalAddressPostalCode = Input.PostalCode;
@@ -268,6 +292,18 @@ namespace OpenWallet.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<UserCustom>)_userStore;
+        }
+
+        private async Task LoadLookupsAsync()
+        {
+            var culture = Request.Cookies["openwallet-lang"] == "ar" ? "ar-SA" : "en-US";
+            IdTypes = (await _lookupService.OptionsAsync("IdType", culture))
+                .Select(o => new SelectListItem(o.Text, o.Code))
+                .ToList();
+            if (IdTypes.Count == 0)
+            {
+                IdTypes.Add(new SelectListItem("SaudiNationalId", "SaudiNationalId"));
+            }
         }
     }
 }

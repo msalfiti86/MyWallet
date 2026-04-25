@@ -1,5 +1,11 @@
+@{
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var isArabic = Context.Request.Cookies["openwallet-lang"] == "ar";
+    var lang = isArabic ? "ar" : "en";
+    var dir = isArabic ? "rtl" : "ltr";
+}
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="@lang" dir="@dir" data-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,19 +16,28 @@
     <link rel="stylesheet" href="~/css/wallet-animations.css" asp-append-version="true" />
 </head>
 <body class="wallet-body">
-    <div class="wallet-shell">
-        <partial name="_Sidebar" />
-        <div class="wallet-main">
-            <partial name="_Topbar" />
-            <main class="wallet-content" role="main">
-                @RenderBody()
-            </main>
+    @if (isAuthenticated)
+    {
+        <div class="wallet-shell">
+            <partial name="_Sidebar" />
+            <div class="wallet-main">
+                <partial name="_Topbar" />
+                <main class="wallet-content" role="main">
+                    @RenderBody()
+                </main>
+            </div>
         </div>
-    </div>
-    <partial name="_ToastContainer" />
-    <partial name="_ConfirmModal" />
-    <partial name="_OtpModal" />
-    <partial name="_LoadingOverlay" />
+        <partial name="_ToastContainer" />
+        <partial name="_ConfirmModal" />
+        <partial name="_OtpModal" />
+        <partial name="_LoadingOverlay" />
+    }
+    else
+    {
+        <main class="wallet-auth-content" role="main">
+            @RenderBody()
+        </main>
+    }
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>

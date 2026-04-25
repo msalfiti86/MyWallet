@@ -1,4 +1,10 @@
 @page
-@{ ViewData["Title"] = "Beneficiaries"; }
-<section class="page-header"><div><h1>Beneficiaries</h1><p>OTP-protected internal wallet, local bank, and international bank beneficiaries.</p></div><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#otpModal"><i class="bi bi-person-vcard"></i> Add beneficiary</button></section>
-<section class="table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>Nickname</th><th>Name</th><th>Type</th><th>Destination</th><th>Verified</th><th>Actions</th></tr></thead><tbody><tr><td>Supplier Riyadh</td><td>Riyadh Trading</td><td>LocalBank</td><td>SA03 **** 0099</td><td><span class="status-badge status-verified">Verified</span></td><td><button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</button></td></tr></tbody></table></div></section>
+@model OpenWallet.Pages.Beneficiaries.IndexModel
+@{ ViewData["Title"] = Model.Ar ? "المستفيدون" : "Beneficiaries"; }
+<section class="page-header"><div><h1>@(Model.Ar ? "المستفيدون" : "Beneficiaries")</h1><p>@(Model.Ar ? "إدارة المستفيدين بحذف ناعم وتحقق OTP." : "Manage beneficiaries with soft delete and OTP-ready validation.")</p></div><a class="btn btn-primary" asp-page="Edit"><i class="bi bi-person-vcard"></i> @(Model.Ar ? "إضافة مستفيد" : "Add beneficiary")</a></section>
+<section class="table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>@(Model.Ar ? "الاسم المختصر" : "Nickname")</th><th>@(Model.Ar ? "الاسم" : "Name")</th><th>@(Model.Ar ? "النوع" : "Type")</th><th>@(Model.Ar ? "الوجهة" : "Destination")</th><th>@(Model.Ar ? "الحالة" : "Status")</th><th>@(Model.Ar ? "إجراءات" : "Actions")</th></tr></thead><tbody>
+@foreach (var item in Model.Beneficiaries)
+{
+    <tr><td>@item.Nickname</td><td>@(Model.Ar ? item.FullNameAr : item.FullNameEn)</td><td>@await Model.LookupText("BeneficiaryType", item.BeneficiaryType)</td><td>@(string.IsNullOrWhiteSpace(item.Iban) ? item.WalletNumber : item.Iban)</td><td><span class="status-badge @(item.IsActive ? "status-active" : "status-failed")">@(item.IsActive ? (Model.Ar ? "نشط" : "Active") : (Model.Ar ? "غير نشط" : "Inactive"))</span></td><td class="d-flex gap-2"><a class="btn btn-sm btn-outline-secondary" asp-page="Edit" asp-route-id="@item.Id">@(Model.Ar ? "تعديل" : "Edit")</a><form method="post" asp-page-handler="Delete" asp-route-id="@item.Id"><button class="btn btn-sm btn-outline-danger">@(Model.Ar ? "حذف" : "Delete")</button></form></td></tr>
+}
+</tbody></table></div></section>

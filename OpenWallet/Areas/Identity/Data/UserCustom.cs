@@ -46,4 +46,5 @@ public class UserCustom : IdentityUser
     public string UpdatedBy { get; set; } = string.Empty;
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
+    public string DeletedBy { get; set; } = string.Empty;
 }

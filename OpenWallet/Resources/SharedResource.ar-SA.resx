@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Dashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Organizations" xml:space="preserve"><value>المنظمات</value></data>
+  <data name="Users" xml:space="preserve"><value>المستخدمون</value></data>
+  <data name="Wallets" xml:space="preserve"><value>المحافظ</value></data>
+  <data name="Transactions" xml:space="preserve"><value>الحركات</value></data>
+  <data name="Beneficiaries" xml:space="preserve"><value>المستفيدون</value></data>
+  <data name="Compliance" xml:space="preserve"><value>الامتثال</value></data>
+  <data name="Complaints" xml:space="preserve"><value>الشكاوى</value></data>
+  <data name="Settings" xml:space="preserve"><value>الإعدادات</value></data>
+  <data name="Lookups" xml:space="preserve"><value>القوائم المرجعية</value></data>
+</root>

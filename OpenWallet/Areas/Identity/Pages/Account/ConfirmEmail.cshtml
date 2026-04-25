@@ -1,8 +1,22 @@
-﻿@page
+@page
 @model ConfirmEmailModel
 @{
     ViewData["Title"] = "Confirm email";
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<section class="auth-shell">
+    <article class="auth-card text-center">
+        <div class="brand-icon mx-auto mb-3"><i class="bi bi-check-lg"></i></div>
+        <h1 class="h3 fw-bold">Email confirmed</h1>
+        <partial name="_StatusMessage" model="Model.StatusMessage" />
+        <p class="text-muted mt-3">Your account email has been confirmed. You can now sign in to continue to OpenWallet KSA.</p>
+        <a class="btn btn-primary w-100 py-3 mt-3" asp-area="Identity" asp-page="/Account/Login">Back to login</a>
+    </article>
+    <article class="auth-hero">
+        <div>
+            <span class="brand-mark"><span class="brand-icon"><i class="bi bi-wallet2"></i></span><span><strong>OpenWallet</strong><small>KSA</small></span></span>
+            <h2 class="display-6 fw-bold mt-5">Secure wallet access is ready</h2>
+            <p class="lead">Your organization workspace, manager account, wallet, and virtual account setup continue after sign in.</p>
+        </div>
+    </article>
+</section>

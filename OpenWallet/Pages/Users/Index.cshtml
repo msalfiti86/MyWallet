@@ -1,9 +1,51 @@
 @page
+@model OpenWallet.Pages.Users.IndexModel
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = Model.Ar ? "المستخدمون" : "Users";
 }
-<section class="page-header"><div><h1>Users</h1><p>Invite managers and wallet users with strict organization isolation, KYC status, roles, and permission visibility.</p></div><button class="btn btn-primary"><i class="bi bi-person-plus"></i> Invite user</button></section>
-<section class="table-card"><div class="row g-2 mb-3"><div class="col-md-5"><input class="form-control" placeholder="Search by name, mobile, email, national ID" /></div><div class="col-md-3"><select class="form-select"><option>All roles</option><option>OrganizationManager</option><option>User</option></select></div><div class="col-md-3"><select class="form-select"><option>All KYC statuses</option><option>Verified</option><option>Pending</option></select></div></div><div class="table-responsive"><table class="data-table"><thead><tr><th>User</th><th>Organization</th><th>Role</th><th>Mobile</th><th>KYC</th><th>Status</th></tr></thead><tbody>
-<tr><td>OpenWallet Admin<br /><small class="text-muted">admin@openwallet.local</small></td><td>OpenWallet</td><td>SuperAdmin</td><td>+966500000000</td><td><span class="status-badge status-verified">Verified</span></td><td><span class="status-badge status-active">Active</span></td></tr>
-<tr><td>Fahad Manager<br /><small class="text-muted">fahad@example.com</small></td><td>Riyadh Services</td><td>OrganizationManager</td><td>0551234567</td><td><span class="status-badge status-pending">Pending</span></td><td><span class="status-badge status-active">Active</span></td></tr>
-</tbody></table></div></section>
+<section class="page-header">
+    <div><h1>@(Model.Ar ? "المستخدمون" : "Users")</h1><p>@(Model.Ar ? "دعوة المستخدمين وإدارة الحذف الناعم حسب المنظمة." : "Invite users and manage organization-scoped soft deletion.")</p></div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inviteModal"><i class="bi bi-person-plus"></i> @(Model.Ar ? "دعوة مستخدم" : "Invite user")</button>
+</section>
+<section class="table-card">
+    <div class="table-responsive"><table class="data-table"><thead><tr><th>@(Model.Ar ? "المستخدم" : "User")</th><th>@(Model.Ar ? "المنظمة" : "Organization")</th><th>@(Model.Ar ? "الجوال" : "Mobile")</th><th>KYC</th><th>@(Model.Ar ? "الحالة" : "Status")</th><th>@(Model.Ar ? "إجراءات" : "Actions")</th></tr></thead><tbody>
+    @foreach (var user in Model.Users)
+    {
+        <tr>
+            <td>@user.FirstNameEn @user.LastNameEn<br /><small class="text-muted">@user.Email</small></td>
+            <td>@user.Organization?.ShortName</td>
+            <td>@user.MobileNumber</td>
+            <td>@await Model.LookupText("KycStatus", user.KycStatus)</td>
+            <td><span class="status-badge @(user.IsBlocked ? "status-failed" : "status-active")">@(user.IsBlocked ? (Model.Ar ? "محظور" : "Blocked") : (Model.Ar ? "نشط" : "Active"))</span></td>
+            <td><form method="post" asp-page-handler="Delete" asp-route-id="@user.Id"><button class="btn btn-sm btn-outline-danger">@(Model.Ar ? "حذف" : "Delete")</button></form></td>
+        </tr>
+    }
+    </tbody></table></div>
+</section>
+
+<div class="modal fade" id="inviteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="post" asp-page-handler="Invite" class="modal-content wallet-modal">
+            <div class="modal-header"><h5 class="modal-title">@(Model.Ar ? "دعوة مستخدم" : "Invite user")</h5><button class="btn-close" data-bs-dismiss="modal" type="button"></button></div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label">First name EN</label><input class="form-control" asp-for="Invite.FirstNameEn" maxlength="60" /></div>
+                    <div class="col-md-6"><label class="form-label">Last name EN</label><input class="form-control" asp-for="Invite.LastNameEn" maxlength="60" /></div>
+                    <div class="col-md-6"><label class="form-label">First name AR</label><input class="form-control" asp-for="Invite.FirstNameAr" dir="rtl" maxlength="60" /></div>
+                    <div class="col-md-6"><label class="form-label">Last name AR</label><input class="form-control" asp-for="Invite.LastNameAr" dir="rtl" maxlength="60" /></div>
+                    <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" asp-for="Invite.Email" /></div>
+                    <div class="col-md-6"><label class="form-label">Mobile</label><input class="form-control" asp-for="Invite.MobileNumber" /></div>
+                    <div class="col-md-6"><label class="form-label">National ID/Iqama</label><input class="form-control" asp-for="Invite.NationalIdOrIqama" maxlength="10" /></div>
+                    <div class="col-md-6"><label class="form-label">ID type</label><select class="form-select" asp-for="Invite.IdType" asp-items="Model.IdTypeOptions"></select></div>
+                    <div class="col-md-6"><label class="form-label">Job title</label><input class="form-control" asp-for="Invite.JobTitle" /></div>
+                    <div class="col-md-6"><label class="form-label">Department</label><input class="form-control" asp-for="Invite.Department" /></div>
+                    <div class="col-md-6"><label class="form-label">City</label><input class="form-control" asp-for="Invite.City" /></div>
+                    <div class="col-md-6"><label class="form-label">Postal code</label><input class="form-control" asp-for="Invite.PostalCode" maxlength="5" /></div>
+                    <div class="col-md-6"><label class="form-label">Organization</label><select class="form-select" asp-for="Invite.OrganizationId" asp-items="Model.OrganizationOptions"></select></div>
+                    <div class="col-md-6"><label class="form-label">Role</label><select class="form-select" asp-for="Invite.RoleName" asp-items="Model.RoleOptions"></select></div>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">Cancel</button><button class="btn btn-primary">Invite</button></div>
+        </form>
+    </div>
+</div>

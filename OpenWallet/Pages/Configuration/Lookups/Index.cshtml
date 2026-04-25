@@ -1,0 +1,37 @@
+@page
+@model OpenWallet.Pages.Configuration.Lookups.IndexModel
+@{
+    ViewData["Title"] = "Lookups";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.T("Lookups")</h1>
+        <p>@Model.T("ManageLookupText")</p>
+    </div>
+    <a class="btn btn-primary" asp-page="Edit"><i class="bi bi-plus-circle"></i> @Model.T("NewLookup")</a>
+</section>
+
+<section class="table-card">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead><tr><th>@Model.T("LookupName")</th><th>@Model.T("Details")</th><th>@Model.T("Status")</th><th>@Model.T("Actions")</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model.Lookups)
+            {
+                <tr>
+                    <td><strong>@item.Name</strong><br /><small class="text-muted">@item.Description</small></td>
+                    <td>@item.Details.Count</td>
+                    <td><span class="status-badge @(item.IsActive ? "status-active" : "status-failed")">@(item.IsActive ? Model.T("Active") : Model.T("Inactive"))</span></td>
+                    <td class="d-flex gap-2">
+                        <a class="btn btn-sm btn-outline-secondary" asp-page="Edit" asp-route-id="@item.Id">@Model.T("Edit")</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">@Model.T("Delete")</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

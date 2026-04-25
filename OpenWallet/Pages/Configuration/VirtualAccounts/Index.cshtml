@@ -1,0 +1,43 @@
+@page
+@model OpenWallet.Pages.Configuration.VirtualAccounts.IndexModel
+@{
+    ViewData["Title"] = "Virtual Accounts";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Virtual account list</h1>
+        <p>Manage the bank-provided virtual IBAN pool used when user wallets are created.</p>
+    </div>
+    <form method="post" asp-page-handler="Seed">
+        <button class="btn btn-primary"><i class="bi bi-plus-circle"></i> Ensure 100 IBANs</button>
+    </form>
+</section>
+
+<section class="stats-grid">
+    <partial name="_PremiumStatCard" model='("Total IBANs", Model.Total.ToString(), "bi-bank", "info")' />
+    <partial name="_PremiumStatCard" model='("Available", Model.Available.ToString(), "bi-check-circle", "success")' />
+    <partial name="_PremiumStatCard" model='("Used", Model.Used.ToString(), "bi-lock", "warning")' />
+    <partial name="_PremiumStatCard" model='("Bank", "BSF", "bi-building", "info")' />
+</section>
+
+<section class="table-card">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead><tr><th>IBAN</th><th>Account number</th><th>Bank</th><th>Status</th><th>Assigned user</th><th>Assigned at</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model.Accounts)
+            {
+                <tr>
+                    <td><strong>@item.Iban</strong></td>
+                    <td>@item.AccountNumber</td>
+                    <td>@item.BankName</td>
+                    <td><span class="status-badge @(item.IsUsed ? "status-pending" : "status-active")">@(item.IsUsed ? "Used" : "Available")</span></td>
+                    <td>@(item.AssignedToUserId ?? "-")</td>
+                    <td>@(item.AssignedAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

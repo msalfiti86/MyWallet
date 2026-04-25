@@ -8,6 +8,8 @@ namespace OpenWallet.Services;
 
 public static class OpenWalletConstants
 {
+    public const string OtpBypassCode = "000000";
+
     public static readonly string[] Roles =
     [
         "SuperAdmin", "SystemAdmin", "OrganizationAdmin", "OrganizationManager", "FinanceManager",
@@ -28,6 +30,48 @@ public static class OpenWalletConstants
         "Notifications.View", "Notifications.ManageTemplates", "AuditLogs.View", "Reports.View",
         "Complaints.View", "Complaints.Manage", "Compliance.View", "Compliance.Manage", "WebhookLogs.View", "Devices.View", "Devices.Manage"
     ];
+}
+
+public record LookupOption(string Code, string Text);
+
+public interface ILookupService
+{
+    Task<IReadOnlyList<LookupOption>> OptionsAsync(string lookupName, string cultureName);
+    Task<string> TextAsync(string lookupName, string code, string cultureName);
+}
+
+public class LookupService(UserContext dbContext) : ILookupService
+{
+    public async Task<IReadOnlyList<LookupOption>> OptionsAsync(string lookupName, string cultureName)
+    {
+        var isArabic = cultureName.StartsWith("ar", StringComparison.OrdinalIgnoreCase);
+        return await dbContext.LookupDetails
+            .Include(d => d.Lookup)
+            .Where(d => d.Lookup != null && d.Lookup.Name == lookupName && d.IsActive && d.Lookup.IsActive)
+            .OrderBy(d => d.SortOrder)
+            .ThenBy(d => d.Code)
+            .Select(d => new LookupOption(d.Code, isArabic ? d.ValueAr : d.ValueEn))
+            .ToListAsync();
+    }
+
+    public async Task<string> TextAsync(string lookupName, string code, string cultureName)
+    {
+        var isArabic = cultureName.StartsWith("ar", StringComparison.OrdinalIgnoreCase);
+        var detail = await dbContext.LookupDetails
+            .Include(d => d.Lookup)
+            .FirstOrDefaultAsync(d => d.Lookup != null && d.Lookup.Name == lookupName && d.Code == code);
+        return detail is null ? code : isArabic ? detail.ValueAr : detail.ValueEn;
+    }
+}
+
+public interface IOtpService
+{
+    bool Validate(string code);
+}
+
+public class OtpService : IOtpService
+{
+    public bool Validate(string code) => code == OpenWalletConstants.OtpBypassCode;
 }
 
 public sealed class PermissionRequirement(string permission) : IAuthorizationRequirement
@@ -134,20 +178,57 @@ public class WalletService(UserContext dbContext, IAuditService auditService) : 
             return wallet;
         }
 
+        var virtualAccount = await dbContext.VirtualAccounts
+            .Where(v => v.IsActive && !v.IsUsed)
+            .OrderBy(v => v.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        if (virtualAccount is null)
+        {
+            virtualAccount = new VirtualAccount
+            {
+                Id = Guid.NewGuid(),
+                OrganizationId = user.OrganizationId,
+                Iban = VirtualAccountGenerator.GenerateIban(),
+                AccountNumber = VirtualAccountGenerator.GenerateAccountNumber(),
+                BankName = "BSF Bank",
+                CreatedBy = "System"
+            };
+            dbContext.VirtualAccounts.Add(virtualAccount);
+        }
+
         wallet = new Wallet
         {
             Id = Guid.NewGuid(),
             OrganizationId = user.OrganizationId,
             UserId = user.Id,
             WalletNumber = GenerateWalletNumber(),
+            AccountNumber = virtualAccount.AccountNumber,
+            VirtualIban = virtualAccount.Iban,
+            BankName = virtualAccount.BankName,
             WalletType = "Personal",
             AvailableBalance = 2500,
             CreatedBy = user.Id
         };
+        virtualAccount.IsUsed = true;
+        virtualAccount.AssignedToUserId = user.Id;
+        virtualAccount.AssignedWalletId = wallet.Id;
+        virtualAccount.AssignedAt = DateTime.UtcNow;
         dbContext.Wallets.Add(wallet);
         await dbContext.SaveChangesAsync();
         await auditService.LogAsync("WalletCreated", nameof(Wallet), wallet.Id.ToString(), user.OrganizationId, user.Id);
         return wallet;
+    }
+}
+
+public static class VirtualAccountGenerator
+{
+    public static string GenerateAccountNumber() => Random.Shared.NextInt64(1000000000000000, 9999999999999999).ToString();
+
+    public static string GenerateIban()
+    {
+        var account = GenerateAccountNumber().PadLeft(18, '0');
+        return $"SA{Random.Shared.Next(10, 99)}55{account}";
     }
 }
 
@@ -219,6 +300,30 @@ public static class OpenWalletSeeder
             }
         }
 
+        await SeedLookupsAsync(db, MainOrganizationId);
+
+        if (await db.VirtualAccounts.CountAsync() < 100)
+        {
+            var existing = await db.VirtualAccounts.Select(v => v.Iban).ToListAsync();
+            var needed = 100 - existing.Count;
+            for (var i = 0; i < needed; i++)
+            {
+                string iban;
+                do { iban = VirtualAccountGenerator.GenerateIban(); } while (existing.Contains(iban));
+                existing.Add(iban);
+                db.VirtualAccounts.Add(new VirtualAccount
+                {
+                    Id = Guid.NewGuid(),
+                    OrganizationId = MainOrganizationId,
+                    Iban = iban,
+                    AccountNumber = VirtualAccountGenerator.GenerateAccountNumber(),
+                    BankName = "BSF Bank",
+                    CreatedBy = "Seeder"
+                });
+            }
+            await db.SaveChangesAsync();
+        }
+
         await db.SaveChangesAsync();
 
         var superAdminRole = await roleManager.FindByNameAsync("SuperAdmin");
@@ -263,6 +368,9 @@ public static class OpenWalletSeeder
                 OrganizationId = MainOrganizationId,
                 UserId = admin.Id,
                 WalletNumber = $"OWKSA{DateTime.UtcNow:yyyyMMdd}123456",
+                AccountNumber = "5555000012345678",
+                VirtualIban = "SA44550000000012345678",
+                BankName = "BSF Bank",
                 WalletType = "Personal",
                 AvailableBalance = 84250,
                 CreatedBy = admin.Id
@@ -274,5 +382,61 @@ public static class OpenWalletSeeder
                 new WalletTransaction { Id = Guid.NewGuid(), TransactionNumber = $"TXN-{DateTime.UtcNow:yyyyMMdd}-121500-303", OrganizationId = MainOrganizationId, FromWalletId = wallet.Id, TransactionType = "InternalTransfer", Direction = "Debit", Amount = 1250, FeeAmount = 0, VatAmount = 0, TotalAmount = 1250, Status = "Completed", PaymentMethod = "Wallet", Category = "Business", CreatedByUserId = admin.Id });
             await db.SaveChangesAsync();
         }
+    }
+
+    private static async Task SeedLookupsAsync(UserContext db, Guid organizationId)
+    {
+        var lookups = new Dictionary<string, (string En, string Ar)[]>
+        {
+            ["OrganizationType"] =
+            [
+                ("Company", "شركة"), ("Establishment", "مؤسسة"), ("Government", "حكومي"), ("NonProfit", "غير ربحي"),
+                ("Waqf", "وقف"), ("IndividualMerchant", "تاجر فردي")
+            ],
+            ["KycStatus"] = [("Pending", "قيد الانتظار"), ("Verified", "موثق"), ("Rejected", "مرفوض"), ("Expired", "منتهي")],
+            ["ComplianceStatus"] = [("Normal", "طبيعي"), ("ReviewRequired", "يتطلب مراجعة"), ("Suspended", "موقوف")],
+            ["WalletType"] = [("Personal", "شخصية"), ("Organization", "منظمة"), ("Merchant", "تاجر")],
+            ["WalletStatus"] = [("Active", "نشطة"), ("Frozen", "مجمدة"), ("Closed", "مغلقة"), ("Suspended", "موقوفة")],
+            ["TransactionType"] = [("TopUp", "شحن"), ("InternalTransfer", "تحويل داخلي"), ("ExternalBankTransfer", "تحويل بنكي خارجي"), ("Refund", "استرداد"), ("Reversal", "عكس قيد"), ("Fee", "رسوم"), ("Adjustment", "تسوية")],
+            ["TransactionDirection"] = [("Credit", "دائن"), ("Debit", "مدين")],
+            ["TransactionStatus"] = [("Pending", "قيد الانتظار"), ("Processing", "قيد المعالجة"), ("Completed", "مكتملة"), ("Failed", "فشلت"), ("Cancelled", "ملغاة"), ("Rejected", "مرفوضة"), ("Reversed", "معكوسة"), ("Refunded", "مستردة")],
+            ["PaymentMethod"] = [("Card", "بطاقة"), ("PayPal", "باي بال"), ("BankAccount", "حساب بنكي"), ("Wallet", "محفظة"), ("BankTransfer", "تحويل بنكي")],
+            ["TransactionCategory"] = [("Personal", "شخصي"), ("Business", "أعمال"), ("Salary", "راتب"), ("SupplierPayment", "دفع مورد"), ("Refund", "استرداد"), ("BillPayment", "سداد فاتورة"), ("Transfer", "تحويل"), ("TopUp", "شحن"), ("Other", "أخرى")],
+            ["BeneficiaryType"] = [("InternalWallet", "محفظة داخلية"), ("LocalBank", "بنك محلي"), ("InternationalBank", "بنك دولي")],
+            ["ComplaintStatus"] = [("Open", "مفتوحة"), ("InProgress", "قيد المعالجة"), ("WaitingForCustomer", "بانتظار العميل"), ("Resolved", "محلولة"), ("Closed", "مغلقة"), ("Rejected", "مرفوضة")],
+            ["ComplaintCategory"] = [("TopUpIssue", "مشكلة شحن"), ("TransferIssue", "مشكلة تحويل"), ("AccountIssue", "مشكلة حساب"), ("BeneficiaryIssue", "مشكلة مستفيد"), ("SecurityIssue", "مشكلة أمنية"), ("Other", "أخرى")],
+            ["Priority"] = [("Low", "منخفضة"), ("Medium", "متوسطة"), ("High", "عالية"), ("Critical", "حرجة")],
+            ["RiskLevel"] = [("Low", "منخفض"), ("Medium", "متوسط"), ("High", "عال"), ("Critical", "حرج")],
+            ["IdType"] = [("SaudiNationalId", "هوية وطنية"), ("Iqama", "إقامة"), ("GCCId", "هوية خليجية"), ("Passport", "جواز سفر")]
+        };
+
+        foreach (var (name, details) in lookups)
+        {
+            var lookup = await db.Lookups.Include(l => l.Details).FirstOrDefaultAsync(l => l.Name == name);
+            if (lookup is null)
+            {
+                lookup = new Lookup { Id = Guid.NewGuid(), Name = name, Description = name, OrganizationId = organizationId, IsSystem = true };
+                db.Lookups.Add(lookup);
+            }
+
+            for (var i = 0; i < details.Length; i++)
+            {
+                var code = details[i].En;
+                if (lookup.Details.All(d => d.Code != code))
+                {
+                    lookup.Details.Add(new LookupDetail
+                    {
+                        Id = Guid.NewGuid(),
+                        OrganizationId = organizationId,
+                        Code = code,
+                        ValueEn = details[i].En,
+                        ValueAr = details[i].Ar,
+                        SortOrder = i + 1
+                    });
+                }
+            }
+        }
+
+        await db.SaveChangesAsync();
     }
 }

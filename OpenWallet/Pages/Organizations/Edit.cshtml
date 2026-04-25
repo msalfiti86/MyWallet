@@ -1,0 +1,25 @@
+@page "{id:guid?}"
+@model OpenWallet.Pages.Organizations.EditModel
+@{
+    ViewData["Title"] = Model.Ar ? "منظمة" : "Organization";
+}
+<section class="page-header"><div><h1>@(Model.Ar ? "بيانات المنظمة" : "Organization details")</h1><p>@(Model.Ar ? "كل عملية حفظ تسجل في سجل التدقيق." : "Every save is recorded in the audit log.")</p></div><a class="btn btn-outline-secondary" asp-page="Index">@(Model.Ar ? "رجوع" : "Back")</a></section>
+<form method="post" class="panel-card">
+    <input asp-for="Input.Id" type="hidden" />
+    <div class="row g-3">
+        <div class="col-md-6"><label class="form-label" asp-for="Input.LegalNameEn"></label><input class="form-control" asp-for="Input.LegalNameEn" /></div>
+        <div class="col-md-6"><label class="form-label" asp-for="Input.LegalNameAr"></label><input class="form-control" asp-for="Input.LegalNameAr" dir="rtl" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.ShortName"></label><input class="form-control" asp-for="Input.ShortName" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.OrganizationType"></label><select class="form-select" asp-for="Input.OrganizationType" asp-items="Model.OrganizationTypes"></select></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.CommercialRegistrationNumber"></label><input class="form-control" asp-for="Input.CommercialRegistrationNumber" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.KycStatus"></label><select class="form-select" asp-for="Input.KycStatus" asp-items="Model.KycStatuses"></select></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.ComplianceStatus"></label><select class="form-select" asp-for="Input.ComplianceStatus" asp-items="Model.ComplianceStatuses"></select></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.OfficialEmail"></label><input class="form-control" asp-for="Input.OfficialEmail" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.OfficialPhone"></label><input class="form-control" asp-for="Input.OfficialPhone" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.ManagerFullName"></label><input class="form-control" asp-for="Input.ManagerFullName" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.ManagerEmail"></label><input class="form-control" asp-for="Input.ManagerEmail" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.NationalAddressCity"></label><input class="form-control" asp-for="Input.NationalAddressCity" /></div>
+        <div class="col-md-4"><label class="form-label" asp-for="Input.NationalAddressPostalCode"></label><input class="form-control" asp-for="Input.NationalAddressPostalCode" /></div>
+    </div>
+    <button class="btn btn-primary mt-4">@(Model.Ar ? "حفظ" : "Save")</button>
+</form>

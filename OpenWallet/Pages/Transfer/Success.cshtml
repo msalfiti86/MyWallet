@@ -1,0 +1,74 @@
+@page
+@model OpenWallet.Pages.Transfer.SuccessModel
+@{
+    ViewData["Title"] = Model.Ar ? "تم التحويل" : "Transfer success";
+}
+
+<section class="receipt-shell">
+    <article class="panel-card receipt-card">
+        <div class="receipt-head">
+            <div class="receipt-icon"><i class="bi bi-check2-circle"></i></div>
+            <div>
+                <h1>@(Model.Ar ? "تم تنفيذ التحويل" : "Transfer completed")</h1>
+                <p>@(Model.Ar ? "تم تسجيل التحويل والرسوم والضريبة في الحركات." : "The transfer, fee, and VAT ledger records were posted successfully.")</p>
+            </div>
+            <button class="btn btn-outline-secondary no-print" onclick="window.print()"><i class="bi bi-printer"></i> @(Model.Ar ? "طباعة" : "Print")</button>
+        </div>
+
+        <div class="receipt-grid">
+            <div><span>@(Model.Ar ? "رقم التحويل" : "Transfer number")</span><strong>@Model.Reference</strong></div>
+            <div><span>@(Model.Ar ? "التاريخ" : "Date")</span><strong>@Model.MainDebit?.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</strong></div>
+            <div><span>@(Model.Ar ? "من" : "From")</span><strong>@SuccessModel.WalletLabel(Model.MainDebit?.FromWallet)</strong></div>
+            <div><span>@(Model.Ar ? "إلى" : "To")</span><strong>@SuccessModel.WalletLabel(Model.MainCredit?.ToWallet)</strong></div>
+            <div><span>@(Model.Ar ? "المبلغ" : "Amount")</span><strong>SAR @Model.Amount.ToString("N2")</strong></div>
+            <div><span>@(Model.Ar ? "الرسوم" : "Fee")</span><strong>SAR @Model.Fee.ToString("N2")</strong></div>
+            <div><span>@(Model.Ar ? "الضريبة" : "VAT")</span><strong>SAR @Model.Vat.ToString("N2")</strong></div>
+            <div><span>@(Model.Ar ? "الإجمالي" : "Total debit")</span><strong>SAR @Model.Total.ToString("N2")</strong></div>
+        </div>
+
+        <div class="table-responsive mt-4">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>@(Model.Ar ? "رقم الحركة" : "Transaction number")</th>
+                        <th>@(Model.Ar ? "النوع" : "Type")</th>
+                        <th>@(Model.Ar ? "الاتجاه" : "Direction")</th>
+                        <th>@(Model.Ar ? "المبلغ" : "Amount")</th>
+                        <th>@(Model.Ar ? "الحالة" : "Status")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Transactions)
+                    {
+                        <tr>
+                            <td>@item.TransactionNumber</td>
+                            <td>@item.TransactionType</td>
+                            <td>@item.Direction</td>
+                            <td>SAR @item.TotalAmount.ToString("N2")</td>
+                            <td><partial name="_TransactionStatusBadge" model="item.Status" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex gap-2 mt-4 no-print">
+            <a class="btn btn-primary" asp-page="/Transfer/Index"><i class="bi bi-send"></i> @(Model.Ar ? "تحويل جديد" : "New transfer")</a>
+            <a class="btn btn-outline-secondary" asp-page="/Transactions/Index"><i class="bi bi-receipt"></i> @(Model.Ar ? "الحركات" : "Transactions")</a>
+        </div>
+    </article>
+</section>
+
+<style>
+    .receipt-shell { max-width: 980px; margin: 0 auto; }
+    .receipt-head { display: flex; align-items: center; gap: 1rem; justify-content: space-between; }
+    .receipt-icon { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: rgba(28, 166, 116, .12); color: #0f9f6e; font-size: 2rem; flex: 0 0 auto; }
+    .receipt-head h1 { margin: 0; font-size: 1.7rem; }
+    .receipt-head p { margin: .25rem 0 0; color: var(--muted-text); }
+    .receipt-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .receipt-grid div { border: 1px solid var(--border-color); border-radius: .75rem; padding: 1rem; }
+    .receipt-grid span { display: block; color: var(--muted-text); font-size: .85rem; margin-bottom: .25rem; }
+    .receipt-grid strong { overflow-wrap: anywhere; }
+    @@media (max-width: 720px) { .receipt-head { align-items: flex-start; flex-direction: column; } .receipt-grid { grid-template-columns: 1fr; } }
+    @@media print { .no-print, .sidebar, .topbar { display: none !important; } .receipt-shell { max-width: none; } .panel-card { box-shadow: none !important; border: 0 !important; } }
+</style>

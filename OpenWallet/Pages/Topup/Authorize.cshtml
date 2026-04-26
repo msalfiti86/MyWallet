@@ -1,0 +1,37 @@
+@page
+@model OpenWallet.Pages.Topup.AuthorizeModel
+@{
+    ViewData["Title"] = "Authorize top-up";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Bank authorization simulation</h1>
+        <p>Review the mock authorization response before crediting the wallet.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-page="Index">Cancel</a>
+</section>
+
+<section class="dashboard-grid">
+    <article class="wallet-card">
+        <span>Issuer response</span>
+        <h2 class="display-6 fw-bold mt-3">Approved</h2>
+        <div class="wallet-number mt-4">@Model.Reference</div>
+        <p class="mt-4 mb-0">This is a simulated success response. Confirm to create the completed top-up credit transaction.</p>
+    </article>
+    <article class="panel-card">
+        <h2 class="h5">Authorization details</h2>
+        <div class="d-grid gap-3 mt-3">
+            <div class="d-flex justify-content-between"><span>Method</span><strong>@Model.Method</strong></div>
+            <div class="d-flex justify-content-between"><span>Amount</span><strong>SAR @Model.Amount.ToString("N2")</strong></div>
+            <div class="d-flex justify-content-between"><span>Response code</span><strong>00</strong></div>
+            <div class="d-flex justify-content-between"><span>Status</span><strong>Success</strong></div>
+        </div>
+        <form method="post" class="mt-4">
+            <input type="hidden" asp-for="Input.Amount" />
+            <input type="hidden" asp-for="Input.Method" />
+            <input type="hidden" asp-for="Input.Reference" />
+            <button class="btn btn-primary w-100 py-3">Confirm and credit wallet</button>
+        </form>
+    </article>
+</section>

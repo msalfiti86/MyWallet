@@ -13,21 +13,24 @@
 
 <section class="dashboard-grid">
     <article class="panel-card">
-        <h2 class="h5">Instant mock top-up</h2>
+        <h2 class="h5">Start top-up</h2>
+        <p class="text-muted">Allowed amount: SAR @Model.MinimumTopUpAmount.ToString("N2") to SAR @Model.MaximumTopUpAmount.ToString("N2").</p>
         <form method="post" class="row g-3 mt-1">
             <div class="col-md-6">
                 <label class="form-label" asp-for="Input.Amount"></label>
-                <input class="form-control" asp-for="Input.Amount" min="1" step="0.01" />
+                <input class="form-control" asp-for="Input.Amount" min="@Model.MinimumTopUpAmount" max="@Model.MaximumTopUpAmount" step="0.01" />
+                <span class="text-danger" asp-validation-for="Input.Amount"></span>
             </div>
             <div class="col-md-6">
                 <label class="form-label" asp-for="Input.PaymentMethod"></label>
                 <select class="form-select" asp-for="Input.PaymentMethod">
                     <option value="Card">Card</option>
                     <option value="PayPal">PayPal</option>
+                    <option value="BankTransfer">Bank account transfer</option>
                 </select>
             </div>
             <div class="col-12">
-                <button class="btn btn-primary w-100 py-3">Simulate payment and credit wallet</button>
+                <button class="btn btn-primary w-100 py-3">Continue to top-up simulation</button>
             </div>
         </form>
     </article>
@@ -40,6 +43,10 @@
         <p class="mt-4 mb-0">Use your virtual IBAN above. Once the bank transfer is received, it can be reconciled and credited to your wallet.</p>
     </article>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 
 <section class="table-card mt-4">
     <h2 class="h5">Wallet account</h2>

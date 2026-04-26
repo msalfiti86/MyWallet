@@ -1,0 +1,66 @@
+@page
+@model OpenWallet.Pages.Topup.SimulateModel
+@{
+    ViewData["Title"] = "Simulate top-up";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@Model.Method top-up simulation</h1>
+        <p>Add mock payment information. Nothing is sent to a real gateway and no full card data is stored.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-page="Index">Back</a>
+</section>
+
+<section class="dashboard-grid">
+    <article class="panel-card">
+        <h2 class="h5">Payment details</h2>
+        <form method="post" class="row g-3 mt-1">
+            <input type="hidden" asp-for="Input.Amount" />
+            <input type="hidden" asp-for="Input.Method" />
+            @if (Model.Method == "PayPal")
+            {
+                <div class="col-12">
+                    <label class="form-label" asp-for="Input.PayPalEmail"></label>
+                    <input class="form-control" asp-for="Input.PayPalEmail" placeholder="payer@example.com" />
+                    <span class="text-danger" asp-validation-for="Input.PayPalEmail"></span>
+                </div>
+            }
+            else
+            {
+                <div class="col-12">
+                    <label class="form-label" asp-for="Input.CardholderName"></label>
+                    <input class="form-control" asp-for="Input.CardholderName" autocomplete="cc-name" />
+                    <span class="text-danger" asp-validation-for="Input.CardholderName"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.CardNumber"></label>
+                    <input class="form-control" asp-for="Input.CardNumber" maxlength="19" placeholder="4111111111111111" autocomplete="cc-number" />
+                    <span class="text-danger" asp-validation-for="Input.CardNumber"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" asp-for="Input.Expiry"></label>
+                    <input class="form-control" asp-for="Input.Expiry" placeholder="12/29" autocomplete="cc-exp" />
+                    <span class="text-danger" asp-validation-for="Input.Expiry"></span>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" asp-for="Input.Cvv"></label>
+                    <input class="form-control" asp-for="Input.Cvv" maxlength="4" autocomplete="cc-csc" />
+                    <span class="text-danger" asp-validation-for="Input.Cvv"></span>
+                </div>
+            }
+            <div class="col-12">
+                <button class="btn btn-primary w-100 py-3">Next: simulate bank authorization</button>
+            </div>
+        </form>
+    </article>
+    <article class="wallet-card">
+        <span>Top-up amount</span>
+        <div class="balance">SAR @Model.Amount.ToString("N2")</div>
+        <p class="mt-4 mb-0">The next screen simulates an issuer/bank authorization response. A transaction is created only after success.</p>
+    </article>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

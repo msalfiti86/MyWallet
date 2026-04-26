@@ -1,4 +1,95 @@
 @page
-@{ ViewData["Title"] = "Settings"; }
-<section class="page-header"><div><h1>Settings</h1><p>Configure fees, limits, payments, security, localization, notification channels, and theme defaults.</p></div><button class="btn btn-primary"><i class="bi bi-save"></i> Save changes</button></section>
-<section class="dashboard-grid"><article class="panel-card"><h2 class="h5">Fees</h2><div class="row g-3 mt-1"><div class="col-md-6"><label class="form-label">Internal transfer fixed</label><input class="form-control" value="0.00" /></div><div class="col-md-6"><label class="form-label">VAT percentage</label><input class="form-control" value="15" /></div><div class="col-md-6"><label class="form-label">External transfer fixed</label><input class="form-control" value="12.00" /></div><div class="col-md-6"><label class="form-label">High value threshold</label><input class="form-control" value="10000" /></div></div></article><article class="panel-card"><h2 class="h5">Localization and theme</h2><label class="form-label mt-3">Default language</label><select class="form-select"><option>en-US</option><option>ar-SA</option></select><label class="form-label mt-3">Default theme</label><select class="form-select"><option>System</option><option>Light</option><option>Dark</option></select></article></section>
+@model OpenWallet.Pages.Settings.IndexModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<section class="page-header">
+    <div>
+        <h1>Settings</h1>
+        <p>Configure transfer fees, VAT, wallet limits, top-up limits, localization, and theme defaults.</p>
+    </div>
+</section>
+
+@if (Model.Saved)
+{
+    <div class="alert alert-success"><i class="bi bi-check2-circle"></i> Settings saved successfully.</div>
+}
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <section class="dashboard-grid">
+        <article class="panel-card">
+            <h2 class="h5">Transfer fees</h2>
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.ExternalBankTransferFeeFixed">External bank transfer fee</label>
+                    <input class="form-control" asp-for="Input.ExternalBankTransferFeeFixed" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.ExternalBankTransferFeeFixed"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.OpenWalletTransferFeeFixed">OpenWallet account transfer fee</label>
+                    <input class="form-control" asp-for="Input.OpenWalletTransferFeeFixed" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.OpenWalletTransferFeeFixed"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.InternalOrganizationTransferFeeFixed">Same organization transfer fee</label>
+                    <input class="form-control" asp-for="Input.InternalOrganizationTransferFeeFixed" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.InternalOrganizationTransferFeeFixed"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.VatPercentage">VAT percentage</label>
+                    <input class="form-control" asp-for="Input.VatPercentage" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.VatPercentage"></span>
+                </div>
+            </div>
+        </article>
+
+        <article class="panel-card">
+            <h2 class="h5">Limits</h2>
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.MinimumTransferAmount">Minimum transfer amount</label>
+                    <input class="form-control" asp-for="Input.MinimumTransferAmount" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.MinimumTransferAmount"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.MaximumTransferAmount">Maximum transfer amount</label>
+                    <input class="form-control" asp-for="Input.MaximumTransferAmount" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.MaximumTransferAmount"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.MinimumTopUpAmount">Minimum top-up amount</label>
+                    <input class="form-control" asp-for="Input.MinimumTopUpAmount" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.MinimumTopUpAmount"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.MaximumTopUpAmount">Maximum top-up amount</label>
+                    <input class="form-control" asp-for="Input.MaximumTopUpAmount" step="0.01" />
+                    <span class="text-danger" asp-validation-for="Input.MaximumTopUpAmount"></span>
+                </div>
+            </div>
+        </article>
+
+        <article class="panel-card">
+            <h2 class="h5">Localization and theme</h2>
+            <label class="form-label mt-3">Default language</label>
+            <select class="form-select">
+                <option>en-US</option>
+                <option>ar-SA</option>
+            </select>
+            <label class="form-label mt-3">Default theme</label>
+            <select class="form-select">
+                <option>System</option>
+                <option>Light</option>
+                <option>Dark</option>
+            </select>
+        </article>
+    </section>
+
+    <button class="btn btn-primary mt-3"><i class="bi bi-save"></i> Save changes</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

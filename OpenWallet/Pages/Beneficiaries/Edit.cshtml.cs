@@ -11,6 +11,7 @@ namespace OpenWallet.Pages.Beneficiaries;
 
 public class EditModel(UserContext dbContext, ILookupService lookups, IOtpService otpService, IAuditService auditService, UserManager<UserCustom> userManager) : PageModel
 {
+    private const string OtpPurpose = "Beneficiary.Save";
     [BindProperty] public InputModel Input { get; set; } = new();
     public List<SelectListItem> Types { get; set; } = [];
     public bool Ar => Request.Cookies["openwallet-lang"] == "ar";
@@ -26,8 +27,6 @@ public class EditModel(UserContext dbContext, ILookupService lookups, IOtpServic
     public async Task<IActionResult> OnPostAsync()
     {
         await LoadLookups();
-        if (!otpService.Validate(Input.OtpCode)) ModelState.AddModelError("Input.OtpCode", "Invalid OTP. Use 000000 for testing.");
-        if (!ModelState.IsValid) return Page();
         var user = User.Identity?.Name ?? "System";
         var appUser = await userManager.GetUserAsync(User) ?? await dbContext.Users.FirstOrDefaultAsync();
         if (appUser is null)
@@ -35,6 +34,11 @@ public class EditModel(UserContext dbContext, ILookupService lookups, IOtpServic
             ModelState.AddModelError("", "Create or seed a user before adding beneficiaries.");
             return Page();
         }
+        if (!await otpService.ValidateAsync(appUser.Id, OtpPurpose, Input.OtpCode))
+        {
+            ModelState.AddModelError("Input.OtpCode", Ar ? "رمز التحقق غير صحيح. استخدم 00000 للاختبار." : "Invalid OTP. Use 00000 for testing.");
+        }
+        if (!ModelState.IsValid) return Page();
         var orgId = appUser.OrganizationId;
         var item = await dbContext.Beneficiaries.FirstOrDefaultAsync(b => b.Id == Input.Id);
         if (item is null) { item = new Beneficiary { Id = Guid.NewGuid(), OrganizationId = orgId, OwnerUserId = appUser.Id, CreatedBy = user }; dbContext.Beneficiaries.Add(item); }
@@ -43,6 +47,13 @@ public class EditModel(UserContext dbContext, ILookupService lookups, IOtpServic
         await dbContext.SaveChangesAsync();
         await auditService.LogAsync("BeneficiarySaved", nameof(Beneficiary), item.Id.ToString(), item.OrganizationId, user);
         return RedirectToPage("Index");
+    }
+    public async Task<IActionResult> OnPostSendOtpAsync()
+    {
+        var appUser = await userManager.GetUserAsync(User) ?? await dbContext.Users.FirstOrDefaultAsync();
+        if (appUser is null) return BadRequest(new { sent = false });
+        var result = await otpService.SendAsync(appUser, OtpPurpose, Ar ? "ar-SA" : "en-US");
+        return new JsonResult(new { sent = result.Sent, maskedDestination = result.MaskedDestination });
     }
     private async Task LoadLookups() => Types = (await lookups.OptionsAsync("BeneficiaryType", Ar ? "ar-SA" : "en-US")).Select(o => new SelectListItem(o.Text, o.Code)).ToList();
     public class InputModel
@@ -57,6 +68,6 @@ public class EditModel(UserContext dbContext, ILookupService lookups, IOtpServic
         public string WalletNumber { get; set; } = string.Empty;
         public string BankName { get; set; } = string.Empty;
         public string Iban { get; set; } = string.Empty;
-        [Required] public string OtpCode { get; set; } = string.Empty;
+        public string OtpCode { get; set; } = string.Empty;
     }
 }

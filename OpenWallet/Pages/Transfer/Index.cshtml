@@ -1,0 +1,112 @@
+@page
+@model OpenWallet.Pages.Transfer.IndexModel
+@{
+    ViewData["Title"] = Model.Ar ? "تحويل" : "Transfer";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@(Model.Ar ? "تحويل الأموال" : "Transfer money")</h1>
+        <p>@(Model.Ar ? "حوّل إلى مستفيد خارجي أو محفظة داخل المؤسسة أو أي حساب OpenWallet." : "Send to an external beneficiary, a same-organization wallet, or any OpenWallet account.")</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-page="/Transactions/Index"><i class="bi bi-receipt"></i> @(Model.Ar ? "الحركات" : "Transactions")</a>
+</section>
+
+<section class="dashboard-grid align-items-start">
+    <article class="panel-card">
+        <h2 class="h5">@(Model.Ar ? "طلب التحويل" : "Transfer request")</h2>
+        <form method="post" class="row g-3 mt-1" id="transferForm" data-requires-otp="true" data-otp-purpose="Transfer.Execute" data-otp-send-url="@Url.Page(null, "SendOtp")">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Input.OtpCode" type="hidden" data-otp-hidden />
+
+            <div class="col-12">
+                <label class="form-label" asp-for="Input.TransferType">@(Model.Ar ? "نوع التحويل" : "Transfer type")</label>
+                <select class="form-select" asp-for="Input.TransferType" id="transferType">
+                    <option value="ExternalBeneficiary">@(Model.Ar ? "مستفيد خارجي" : "External beneficiary")</option>
+                    <option value="SameOrganizationWallet">@(Model.Ar ? "محفظة داخل نفس المؤسسة" : "Same organization wallet")</option>
+                    <option value="OpenWalletAccount">@(Model.Ar ? "حساب OpenWallet" : "OpenWallet account")</option>
+                </select>
+            </div>
+
+            <div class="col-12 transfer-destination" data-type="ExternalBeneficiary">
+                <label class="form-label" asp-for="Input.BeneficiaryId">@(Model.Ar ? "المستفيد" : "Beneficiary")</label>
+                <select class="form-select" asp-for="Input.BeneficiaryId" asp-items="Model.BeneficiaryOptions">
+                    <option value="">@(Model.Ar ? "اختر مستفيد" : "Choose beneficiary")</option>
+                </select>
+                <span class="text-danger" asp-validation-for="Input.BeneficiaryId"></span>
+            </div>
+
+            <div class="col-12 transfer-destination" data-type="SameOrganizationWallet">
+                <label class="form-label" asp-for="Input.SameOrganizationWalletId">@(Model.Ar ? "محفظة المؤسسة" : "Organization wallet")</label>
+                <select class="form-select" asp-for="Input.SameOrganizationWalletId" asp-items="Model.SameOrganizationWalletOptions">
+                    <option value="">@(Model.Ar ? "اختر محفظة" : "Choose wallet")</option>
+                </select>
+            </div>
+
+            <div class="col-12 transfer-destination" data-type="OpenWalletAccount">
+                <label class="form-label" asp-for="Input.OpenWalletWalletNumber">@(Model.Ar ? "رقم المحفظة" : "Wallet number")</label>
+                <input class="form-control" asp-for="Input.OpenWalletWalletNumber" placeholder="OWKSA..." />
+                <div class="form-text">@(Model.Ar ? "أو اختر مستخدم من القائمة القابلة للبحث أدناه." : "Or choose a user from the searchable list below.")</div>
+                <label class="form-label mt-2" asp-for="Input.OpenWalletUserWalletId">@(Model.Ar ? "بحث بالاسم أو الهوية" : "Search by name or ID")</label>
+                <select class="form-select" asp-for="Input.OpenWalletUserWalletId" asp-items="Model.OpenWalletUserOptions">
+                    <option value="">@(Model.Ar ? "اختر مستخدم" : "Choose user")</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" asp-for="Input.Amount">@(Model.Ar ? "المبلغ" : "Amount")</label>
+                <input class="form-control" asp-for="Input.Amount" min="@Model.MinimumTransferAmount" max="@Model.MaximumTransferAmount" step="0.01" id="amountInput" />
+                <span class="text-danger" asp-validation-for="Input.Amount"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" asp-for="Input.Description">@(Model.Ar ? "الوصف" : "Description")</label>
+                <input class="form-control" asp-for="Input.Description" maxlength="200" />
+            </div>
+
+            <div class="col-12">
+                <div class="otp-panel">
+                    <i class="bi bi-shield-lock"></i>
+                    <div>
+                        <strong>@(Model.Ar ? "تحقق آمن" : "Secure verification")</strong>
+                        <span>@(Model.Ar ? "سيظهر رمز التحقق عند تنفيذ التحويل. للاختبار استخدم 00000." : "OTP will appear when you complete the transfer. For testing, use 00000.")</span>
+                    </div>
+                </div>
+                <span class="text-danger" asp-validation-for="Input.OtpCode"></span>
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary w-100 py-3"><i class="bi bi-send-check"></i> @(Model.Ar ? "تنفيذ التحويل" : "Complete transfer")</button>
+            </div>
+        </form>
+    </article>
+
+    <aside class="wallet-card transfer-summary">
+        <span>@(Model.Ar ? "رصيدك المتاح" : "Available balance")</span>
+        <h2>SAR @Model.SenderWallet?.AvailableBalance.ToString("N2")</h2>
+        <div class="wallet-number">@Model.SenderWallet?.WalletNumber</div>
+        <div class="summary-line"><span>@(Model.Ar ? "الحد الأدنى" : "Minimum")</span><strong>SAR @Model.MinimumTransferAmount.ToString("N2")</strong></div>
+        <div class="summary-line"><span>@(Model.Ar ? "الحد الأعلى" : "Maximum")</span><strong>SAR @Model.MaximumTransferAmount.ToString("N2")</strong></div>
+        <hr />
+        <div class="summary-line"><span>@(Model.Ar ? "رسوم مستفيد خارجي" : "External fee")</span><strong>SAR @Model.ExternalBankFee.ToString("N2")</strong></div>
+        <div class="summary-line"><span>@(Model.Ar ? "رسوم OpenWallet" : "OpenWallet fee")</span><strong>SAR @Model.OpenWalletFee.ToString("N2")</strong></div>
+        <div class="summary-line"><span>@(Model.Ar ? "رسوم داخلية" : "Internal fee")</span><strong>SAR @Model.InternalOrganizationFee.ToString("N2")</strong></div>
+        <div class="summary-line"><span>@(Model.Ar ? "ضريبة القيمة المضافة" : "VAT")</span><strong>@Model.VatPercentage.ToString("N2")%</strong></div>
+        <p class="mt-3 mb-0">@(Model.Ar ? "سيتم إنشاء قيود منفصلة للمبلغ والرسوم والضريبة." : "Separate ledger entries are created for transfer amount, fee, and VAT.")</p>
+    </aside>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const transferType = document.getElementById('transferType');
+        const blocks = document.querySelectorAll('.transfer-destination');
+        function syncTransferBlocks() {
+            blocks.forEach(block => {
+                block.style.display = block.dataset.type === transferType.value ? '' : 'none';
+            });
+        }
+        transferType.addEventListener('change', syncTransferBlocks);
+        syncTransferBlocks();
+    </script>
+}

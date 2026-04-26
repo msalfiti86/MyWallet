@@ -1,0 +1,108 @@
+@page
+@model OpenWallet.Pages.Statement.IndexModel
+@{
+    ViewData["Title"] = Model.Ar ? "كشف الحساب" : "Statement";
+}
+
+<section class="page-header">
+    <div>
+        <h1>@(Model.Ar ? "كشف الحساب" : "Wallet statement")</h1>
+        <p>@(Model.Ar ? "فلتر الحركات حسب التاريخ والنوع والحالة ثم اطبع الكشف." : "Filter transactions by date, type, direction, status, and print the statement.")</p>
+    </div>
+    <button class="btn btn-primary no-print" onclick="window.print()"><i class="bi bi-printer"></i> @(Model.Ar ? "طباعة" : "Print")</button>
+</section>
+
+<section class="panel-card statement-filters mb-3">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-2">
+            <label class="form-label" asp-for="FromDate">@(Model.Ar ? "من تاريخ" : "From")</label>
+            <input class="form-control" asp-for="FromDate" type="date" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" asp-for="ToDate">@(Model.Ar ? "إلى تاريخ" : "To")</label>
+            <input class="form-control" asp-for="ToDate" type="date" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" asp-for="Type">@(Model.Ar ? "النوع" : "Type")</label>
+            <select class="form-select" asp-for="Type" asp-items="Model.TypeOptions">
+                <option value="">@(Model.Ar ? "كل الأنواع" : "All types")</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" asp-for="Direction">@(Model.Ar ? "الاتجاه" : "Direction")</label>
+            <select class="form-select" asp-for="Direction">
+                <option value="">@(Model.Ar ? "الكل" : "All")</option>
+                <option value="Credit">@(Model.Ar ? "دائن" : "Credit")</option>
+                <option value="Debit">@(Model.Ar ? "مدين" : "Debit")</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" asp-for="Status">@(Model.Ar ? "الحالة" : "Status")</label>
+            <select class="form-select" asp-for="Status">
+                <option value="">@(Model.Ar ? "كل الحالات" : "All statuses")</option>
+                <option value="Completed">@(Model.Ar ? "مكتملة" : "Completed")</option>
+                <option value="Pending">@(Model.Ar ? "قيد الانتظار" : "Pending")</option>
+                <option value="Failed">@(Model.Ar ? "فشلت" : "Failed")</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" asp-for="Reference">@(Model.Ar ? "رقم مرجعي" : "Reference")</label>
+            <input class="form-control" asp-for="Reference" />
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button class="btn btn-primary"><i class="bi bi-funnel"></i> @(Model.Ar ? "تطبيق الفلتر" : "Apply filters")</button>
+            <a class="btn btn-outline-secondary" asp-page="/Statement/Index">@(Model.Ar ? "مسح" : "Clear")</a>
+        </div>
+    </form>
+</section>
+
+<section class="stats-grid">
+    <partial name="_PremiumStatCard" model='((Model.Ar ? "الرصيد الافتتاحي" : "Opening Balance"), $"SAR {Model.OpeningBalance:N2}", "bi-bank", "info")' />
+    <partial name="_PremiumStatCard" model='((Model.Ar ? "إجمالي الدائن" : "Total Credit"), $"SAR {Model.TotalCredit:N2}", "bi-arrow-down-circle", "success")' />
+    <partial name="_PremiumStatCard" model='((Model.Ar ? "إجمالي المدين" : "Total Debit"), $"SAR {Model.TotalDebit:N2}", "bi-arrow-up-circle", "warning")' />
+    <partial name="_PremiumStatCard" model='((Model.Ar ? "الرصيد الختامي" : "Closing Balance"), $"SAR {Model.ClosingBalance:N2}", "bi-wallet2", "primary")' />
+</section>
+
+<section class="table-card">
+    <div class="statement-print-title">
+        <h1>@(Model.Ar ? "كشف حساب OpenWallet" : "OpenWallet Statement")</h1>
+        <p>@DateTime.Now.ToString("yyyy-MM-dd HH:mm")</p>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>@(Model.Ar ? "التاريخ" : "Date")</th>
+                    <th>@(Model.Ar ? "رقم الحركة" : "Transaction")</th>
+                    <th>@(Model.Ar ? "المرجع" : "Reference")</th>
+                    <th>@(Model.Ar ? "النوع" : "Type")</th>
+                    <th>@(Model.Ar ? "الاتجاه" : "Direction")</th>
+                    <th>@(Model.Ar ? "IBAN" : "IBAN")</th>
+                    <th>@(Model.Ar ? "المبلغ" : "Amount")</th>
+                    <th>@(Model.Ar ? "الرسوم" : "Fee")</th>
+                    <th>@(Model.Ar ? "الضريبة" : "VAT")</th>
+                    <th>@(Model.Ar ? "الإجمالي" : "Total")</th>
+                    <th>@(Model.Ar ? "الحالة" : "Status")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Transactions)
+                {
+                    <tr>
+                        <td>@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@item.TransactionNumber</td>
+                        <td>@item.ReferenceNumber</td>
+                        <td>@item.TransactionType</td>
+                        <td>@item.Direction</td>
+                        <td>@item.VirtualIban</td>
+                        <td>SAR @item.Amount.ToString("N2")</td>
+                        <td>SAR @item.FeeAmount.ToString("N2")</td>
+                        <td>SAR @item.VatAmount.ToString("N2")</td>
+                        <td>SAR @item.TotalAmount.ToString("N2")</td>
+                        <td><partial name="_TransactionStatusBadge" model="item.Status" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

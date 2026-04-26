@@ -9,7 +9,7 @@
         <h1>Wallet command center</h1>
         <p>Monitor organization balance, approvals, suspicious activity, and user wallet operations from one responsive bilingual workspace.</p>
     </div>
-    <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#otpModal"><i class="bi bi-plus-circle"></i> New transfer</button>
+    <a class="btn btn-primary px-4" asp-page="/Transfer/Index"><i class="bi bi-plus-circle"></i> New transfer</a>
 </section>
 
 <section class="dashboard-grid">
@@ -18,9 +18,9 @@
         <div class="balance" data-counter>SAR 84250</div>
         <div class="wallet-number">OWKSA20260425123456</div>
         <div class="quick-actions">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal"><i class="bi bi-credit-card"></i> Top up</button>
-            <button type="button" data-bs-toggle="modal" data-bs-target="#otpModal"><i class="bi bi-send"></i> Transfer</button>
-            <button type="button"><i class="bi bi-file-earmark-arrow-down"></i> Statement</button>
+            <a asp-page="/Topup/Index"><i class="bi bi-credit-card"></i> Top up</a>
+            <a asp-page="/Transfer/Index"><i class="bi bi-send"></i> Transfer</a>
+            <a asp-page="/Statement/Index"><i class="bi bi-file-earmark-arrow-down"></i> Statement</a>
         </div>
     </article>
     <article class="panel-card">

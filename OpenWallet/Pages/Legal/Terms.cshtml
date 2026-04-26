@@ -1,0 +1,49 @@
+@page
+@{
+    var ar = Request.Cookies["openwallet-lang"] == "ar";
+    ViewData["Title"] = ar ? "الشروط والسياسات" : "Terms and Policies";
+}
+
+<section class="auth-shell">
+    <article class="auth-hero">
+        <div>
+            <span class="brand-mark"><span class="brand-icon"><i class="bi bi-wallet2"></i></span><span><strong>OpenWallet</strong><small>KSA</small></span></span>
+            <h1 class="display-5 fw-bold mt-5">@(ar ? "الشروط والسياسات" : "Recommended user terms and policies")</h1>
+            <p class="lead mt-3">@(ar ? "يمكنك تغيير اللغة من هنا وقراءة أهم الشروط قبل إنشاء الحساب." : "Switch language here and review the recommended terms before creating an account.")</p>
+        </div>
+        <button class="chip-button align-self-start" type="button" data-wallet-lang><i class="bi bi-translate"></i><span>@(ar ? "عربي / English" : "EN / AR")</span></button>
+    </article>
+
+    <article class="auth-card">
+        @if (ar)
+        {
+            <h2 class="h4 fw-bold">ملخص شروط استخدام OpenWallet KSA</h2>
+            <ol class="mt-4 d-grid gap-3">
+                <li>يجب تقديم بيانات صحيحة للمنظمة والمستخدم، بما في ذلك السجل التجاري والهوية أو الإقامة.</li>
+                <li>يتم إنشاء محفظة وحساب افتراضي لكل مستخدم بعد اكتمال التسجيل أو قبول الدعوة.</li>
+                <li>يجب استخدام المحفظة للأغراض النظامية فقط وضمن حدود التحويل المعتمدة.</li>
+                <li>تخضع عمليات الشحن والتحويل والاسترداد والمستفيدين للتحقق، وقد تتطلب OTP أو موافقة إدارية.</li>
+                <li>يوافق المستخدم على تسجيل العمليات الحساسة في سجل التدقيق لأغراض الأمان والامتثال.</li>
+                <li>قد يتم إيقاف المنظمة أو تجميد المحفظة عند الاشتباه في نشاط غير نظامي أو مخالفة السياسات.</li>
+                <li>لا يتم حفظ رقم البطاقة الكامل أو CVV داخل النظام، ويتم استخدام بيانات مقنعة أو رموز مزود الخدمة فقط.</li>
+                <li>تتم معالجة البيانات الشخصية وفق متطلبات الخصوصية والامتثال المعمول بها في المملكة العربية السعودية.</li>
+            </ol>
+            <a class="btn btn-primary w-100 mt-4" asp-area="Identity" asp-page="/Account/Register">العودة للتسجيل</a>
+        }
+        else
+        {
+            <h2 class="h4 fw-bold">OpenWallet KSA user terms summary</h2>
+            <ol class="mt-4 d-grid gap-3">
+                <li>Organization and user information must be accurate, including commercial registration, national ID, or Iqama.</li>
+                <li>Each user receives an individual wallet and virtual account after registration or invitation completion.</li>
+                <li>The wallet must be used only for lawful business and personal purposes within configured transaction limits.</li>
+                <li>Top-ups, transfers, refunds, reversals, and beneficiary changes may require OTP or administrative approval.</li>
+                <li>The user agrees that sensitive actions are recorded in audit logs for security and compliance.</li>
+                <li>Organizations may be suspended and wallets may be frozen if suspicious or policy-violating activity is detected.</li>
+                <li>Full card numbers and CVV values are never stored; only masked data or provider tokens may be retained.</li>
+                <li>Personal data is handled according to applicable privacy and compliance expectations in Saudi Arabia.</li>
+            </ol>
+            <a class="btn btn-primary w-100 mt-4" asp-area="Identity" asp-page="/Account/Register">Back to registration</a>
+        }
+    </article>
+</section>

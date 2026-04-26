@@ -2,14 +2,18 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
+    var ar = Request.Cookies["openwallet-lang"] == "ar";
 }
 
 <section class="auth-shell register-shell">
     <article class="auth-hero">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="chip-button" data-wallet-lang><i class="bi bi-translate"></i><span>@(ar ? "English" : "العربية")</span></button>
+        </div>
         <div>
             <span class="brand-mark"><span class="brand-icon"><i class="bi bi-wallet2"></i></span><span><strong>OpenWallet</strong><small>KSA</small></span></span>
-            <h1 class="display-5 fw-bold mt-5">Create an organization wallet workspace</h1>
-            <p class="lead mt-3">A guided registration for organization details, manager identity, wallet security, and policy agreement.</p>
+            <h1 class="display-5 fw-bold mt-5">@(ar ? "إنشاء مساحة محافظ للمؤسسة" : "Create an organization wallet workspace")</h1>
+            <p class="lead mt-3">@(ar ? "تسجيل موجه لبيانات المؤسسة وهوية المدير وأمان المحفظة والموافقة على السياسات." : "A guided registration for organization details, manager identity, wallet security, and policy agreement.")</p>
         </div>
         <div class="wizard-steps" data-register-progress><span class="active"></span><span></span><span></span></div>
     </article>
@@ -17,15 +21,15 @@
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h2 class="h4 fw-bold mb-1">Organization registration</h2>
-                    <p class="text-muted mb-0">No user can be created without an organization.</p>
+                    <h2 class="h4 fw-bold mb-1">@(ar ? "تسجيل المؤسسة" : "Organization registration")</h2>
+                    <p class="text-muted mb-0">@(ar ? "لا يمكن إنشاء مستخدم بدون مؤسسة." : "No user can be created without an organization.")</p>
                 </div>
-                <span class="status-badge status-active" data-step-label>Step 1 of 3</span>
+                <span class="status-badge status-active" data-step-label>@(ar ? "الخطوة 1 من 3" : "Step 1 of 3")</span>
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
             <div class="register-step is-active" data-step="1">
-                <h3 class="h6 fw-bold mb-3">Organization information</h3>
+                <h3 class="h6 fw-bold mb-3">@(ar ? "معلومات المؤسسة" : "Organization information")</h3>
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameEn"></label><input asp-for="Input.OrganizationLegalNameEn" class="form-control" maxlength="120" required /></div>
                     <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameAr"></label><input asp-for="Input.OrganizationLegalNameAr" class="form-control" maxlength="120" dir="rtl" /></div>
@@ -35,7 +39,7 @@
             </div>
 
             <div class="register-step" data-step="2">
-                <h3 class="h6 fw-bold mb-3">Manager information</h3>
+                <h3 class="h6 fw-bold mb-3">@(ar ? "معلومات المدير" : "Manager information")</h3>
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label" asp-for="Input.FirstNameEn"></label><input asp-for="Input.FirstNameEn" class="form-control" maxlength="60" required /></div>
                     <div class="col-md-6"><label class="form-label" asp-for="Input.LastNameEn"></label><input asp-for="Input.LastNameEn" class="form-control" maxlength="60" required /></div>
@@ -50,14 +54,18 @@
             </div>
 
             <div class="register-step" data-step="3">
-                <h3 class="h6 fw-bold mb-3">Security and agreement</h3>
+                <h3 class="h6 fw-bold mb-3">@(ar ? "الأمان والاتفاقية" : "Security and agreement")</h3>
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label" asp-for="Input.Password"></label><input asp-for="Input.Password" class="form-control" autocomplete="new-password" required /></div>
                     <div class="col-md-6"><label class="form-label" asp-for="Input.ConfirmPassword"></label><input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" required /></div>
                     <div class="col-12">
                         <label class="form-check agreement-box">
                             <input class="form-check-input" asp-for="Input.AcceptTerms" required />
-                            <span class="form-check-label">I accept the OpenWallet KSA terms, privacy policy, wallet agreement, and consent to audit logging for sensitive actions.</span>
+                            <span class="form-check-label">
+                                @(ar ? "أوافق على" : "I accept the OpenWallet KSA")
+                                <a asp-page="/Legal/Terms" target="_blank">@(ar ? "الشروط وسياسة الخصوصية واتفاقية المحفظة" : "terms, privacy policy, and wallet agreement")</a>
+                                @(ar ? "وأوافق على تسجيل التدقيق للعمليات الحساسة." : "and consent to audit logging for sensitive actions.")
+                            </span>
                         </label>
                         <span asp-validation-for="Input.AcceptTerms" class="text-danger"></span>
                     </div>
@@ -65,9 +73,10 @@
             </div>
 
             <div class="d-flex gap-2 mt-4">
-                <button class="btn btn-outline-secondary flex-fill" type="button" data-register-prev disabled>Back</button>
-                <button class="btn btn-primary flex-fill" type="button" data-register-next>Next</button>
-                <button id="registerSubmit" type="submit" class="btn btn-primary flex-fill d-none">Create organization and manager</button>
+                <a class="btn btn-outline-secondary flex-fill" asp-page="./Login">@(ar ? "إلغاء" : "Cancel")</a>
+                <button class="btn btn-outline-secondary flex-fill" type="button" data-register-prev disabled>@(ar ? "رجوع" : "Back")</button>
+                <button class="btn btn-primary flex-fill" type="button" data-register-next>@(ar ? "التالي" : "Next")</button>
+                <button id="registerSubmit" type="submit" class="btn btn-primary flex-fill d-none">@(ar ? "إنشاء المؤسسة والمدير" : "Create organization and manager")</button>
             </div>
         </form>
     </article>
@@ -90,7 +99,7 @@
                 prev.disabled = step === 1;
                 next.classList.toggle("d-none", step === 3);
                 submit.classList.toggle("d-none", step !== 3);
-                label.textContent = `Step ${step} of 3`;
+                label.textContent = document.documentElement.lang === "ar" ? `الخطوة ${step} من 3` : `Step ${step} of 3`;
             };
             const validCurrent = () => {
                 const current = document.querySelector(`.register-step[data-step="${step}"]`);

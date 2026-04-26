@@ -3,12 +3,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using OpenWallet.Areas.Identity.Data;
+using System.Net;
+using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace OpenWallet.Services;
 
 public static class OpenWalletConstants
 {
-    public const string OtpBypassCode = "000000";
+    public const string OtpBypassCode = "00000";
 
     public static readonly string[] Roles =
     [
@@ -67,11 +71,136 @@ public class LookupService(UserContext dbContext) : ILookupService
 public interface IOtpService
 {
     bool Validate(string code);
+    Task<OtpSendResult> SendAsync(UserCustom user, string purpose, string cultureName);
+    Task<bool> ValidateAsync(string userId, string purpose, string code);
+    string MaskEmail(string email);
 }
 
-public class OtpService : IOtpService
+public record OtpSendResult(bool Sent, string MaskedDestination, DateTime ExpiresAt);
+
+public class OtpService(UserContext dbContext, IEmailSender emailSender, IConfiguration configuration) : IOtpService
 {
-    public bool Validate(string code) => code == OpenWalletConstants.OtpBypassCode;
+    public bool Validate(string code) => code is OpenWalletConstants.OtpBypassCode or "000000";
+
+    public async Task<OtpSendResult> SendAsync(UserCustom user, string purpose, string cultureName)
+    {
+        var email = user.Email ?? "";
+        var code = RandomNumberGenerator.GetInt32(100000, 999999).ToString();
+        var expiryMinutes = configuration.GetValue("Security:OtpExpiryMinutes", 5);
+        var expiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes);
+
+        dbContext.OtpCodes.Add(new OtpCode
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            Purpose = purpose,
+            CodeHash = Hash(code),
+            ExpiresAt = expiresAt
+        });
+        await dbContext.SaveChangesAsync();
+
+        var isArabic = cultureName.StartsWith("ar", StringComparison.OrdinalIgnoreCase);
+        var subject = isArabic ? "رمز التحقق من OpenWallet" : "OpenWallet verification code";
+        var body = isArabic
+            ? $"<p>رمز التحقق لإكمال العملية هو <strong>{code}</strong>.</p><p>ينتهي الرمز خلال {expiryMinutes} دقائق.</p>"
+            : $"<p>Your verification code to continue the current action is <strong>{code}</strong>.</p><p>This code expires in {expiryMinutes} minutes.</p>";
+
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            await emailSender.SendEmailAsync(email, subject, body);
+        }
+
+        return new OtpSendResult(true, MaskEmail(email), expiresAt);
+    }
+
+    public async Task<bool> ValidateAsync(string userId, string purpose, string code)
+    {
+        code = code.Trim();
+        if (Validate(code))
+        {
+            return true;
+        }
+
+        var hash = Hash(code);
+        var otp = await dbContext.OtpCodes
+            .Where(o => o.UserId == userId && o.Purpose == purpose && !o.IsUsed && o.ExpiresAt >= DateTime.UtcNow)
+            .OrderByDescending(o => o.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        if (otp is null || otp.CodeHash != hash)
+        {
+            return false;
+        }
+
+        otp.IsUsed = true;
+        await dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public string MaskEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+        {
+            return "m***@e***.com";
+        }
+
+        var parts = email.Split('@', 2);
+        var name = parts[0];
+        var domainParts = parts[1].Split('.');
+        var maskedName = name.Length == 0 ? "m***" : name.Length <= 2 ? $"{name[0]}***" : $"{name[0]}{name[1]}***";
+        var maskedDomain = string.Join(".", domainParts.Select(p => p.Length == 0 ? "" : $"{p[0]}**"));
+        return $"{maskedName}@{maskedDomain}";
+    }
+
+    private static string Hash(string value)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(value));
+        return Convert.ToHexString(bytes);
+    }
+}
+
+public interface ISettingsService
+{
+    Task<decimal> GetDecimalAsync(string groupName, string key, decimal defaultValue);
+    Task SetAsync(string groupName, string key, string value, string description, string userId);
+}
+
+public class SettingsService(UserContext dbContext) : ISettingsService
+{
+    public async Task<decimal> GetDecimalAsync(string groupName, string key, decimal defaultValue)
+    {
+        var value = await dbContext.SystemSettings
+            .Where(s => s.GroupName == groupName && s.Key == key)
+            .Select(s => s.Value)
+            .FirstOrDefaultAsync();
+
+        return decimal.TryParse(value, out var parsed) ? parsed : defaultValue;
+    }
+
+    public async Task SetAsync(string groupName, string key, string value, string description, string userId)
+    {
+        var setting = await dbContext.SystemSettings.FirstOrDefaultAsync(s => s.GroupName == groupName && s.Key == key);
+        if (setting is null)
+        {
+            dbContext.SystemSettings.Add(new SystemSetting
+            {
+                Id = Guid.NewGuid(),
+                GroupName = groupName,
+                Key = key,
+                Value = value,
+                Description = description,
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+        else
+        {
+            setting.Value = value;
+            setting.Description = description;
+            setting.UpdatedAt = DateTime.UtcNow;
+        }
+
+        await dbContext.SaveChangesAsync();
+    }
 }
 
 public sealed class PermissionRequirement(string permission) : IAuthorizationRequirement
@@ -232,9 +361,43 @@ public static class VirtualAccountGenerator
     }
 }
 
-public class NoOpEmailSender : IEmailSender
+public class SmtpEmailSender(IConfiguration configuration) : IEmailSender
 {
-    public Task SendEmailAsync(string email, string subject, string htmlMessage) => Task.CompletedTask;
+    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+    {
+        var host = configuration["EmailSettings:Host"];
+        if (string.IsNullOrWhiteSpace(host))
+        {
+            return;
+        }
+
+        var port = configuration.GetValue("EmailSettings:Port", 587);
+        var senderEmail = configuration["EmailSettings:SenderEmail"] ?? "no-reply@openwallet.local";
+        var senderName = configuration["EmailSettings:SenderName"] ?? "OpenWallet KSA";
+        var username = configuration["EmailSettings:Username"];
+        var password = configuration["EmailSettings:Password"];
+        var enableSsl = configuration.GetValue("EmailSettings:EnableSsl", true);
+
+        using var message = new MailMessage
+        {
+            From = new MailAddress(senderEmail, senderName),
+            Subject = subject,
+            Body = htmlMessage,
+            IsBodyHtml = true
+        };
+        message.To.Add(email);
+
+        using var client = new SmtpClient(host, port)
+        {
+            EnableSsl = enableSsl
+        };
+        if (!string.IsNullOrWhiteSpace(username))
+        {
+            client.Credentials = new NetworkCredential(username, password);
+        }
+
+        await client.SendMailAsync(message);
+    }
 }
 
 public static class OpenWalletSeeder
@@ -297,6 +460,24 @@ public static class OpenWalletSeeder
             if (!await db.TransactionCategories.AnyAsync(c => c.Name == category))
             {
                 db.TransactionCategories.Add(new TransactionCategory { Id = Guid.NewGuid(), Name = category });
+            }
+        }
+
+        foreach (var setting in new[]
+        {
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "WalletLimits", Key = "MinimumTopUpAmount", Value = "50", Description = "Minimum wallet top-up amount" },
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "WalletLimits", Key = "MaximumTopUpAmount", Value = "100000", Description = "Maximum wallet top-up amount" },
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "TransferFees", Key = "ExternalBankTransferFeeFixed", Value = "12", Description = "Fixed fee for external beneficiary bank transfers" },
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "TransferFees", Key = "OpenWalletTransferFeeFixed", Value = "1", Description = "Fixed fee for transfers to OpenWallet wallet accounts" },
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "TransferFees", Key = "InternalOrganizationTransferFeeFixed", Value = "0", Description = "Fixed fee for transfers inside the same organization" },
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "TransferFees", Key = "VatPercentage", Value = "15", Description = "VAT percentage applied to transfer fees" },
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "WalletLimits", Key = "MinimumTransferAmount", Value = "1", Description = "Minimum transfer amount" },
+            new SystemSetting { Id = Guid.NewGuid(), GroupName = "WalletLimits", Key = "MaximumTransferAmount", Value = "100000", Description = "Maximum transfer amount" }
+        })
+        {
+            if (!await db.SystemSettings.AnyAsync(s => s.GroupName == setting.GroupName && s.Key == setting.Key))
+            {
+                db.SystemSettings.Add(setting);
             }
         }
 

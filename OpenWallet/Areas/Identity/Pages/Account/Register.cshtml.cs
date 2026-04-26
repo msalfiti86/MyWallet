@@ -150,7 +150,6 @@ namespace OpenWallet.Areas.Identity.Pages.Account
             [Display(Name = "Postal code")]
             public string PostalCode { get; set; }
 
-            [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms, privacy policy, and wallet agreement.")]
             [Display(Name = "Agreement")]
             public bool AcceptTerms { get; set; }
 
@@ -187,6 +186,11 @@ namespace OpenWallet.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             await LoadLookupsAsync();
+            if (!Input.AcceptTerms)
+            {
+                ModelState.AddModelError("Input.AcceptTerms", "You must accept the terms, privacy policy, and wallet agreement.");
+            }
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();

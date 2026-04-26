@@ -63,8 +63,9 @@ builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<ILookupService, LookupService>();
-builder.Services.AddSingleton<IOtpService, OtpService>();
-builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, SmtpEmailSender>();
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/");
@@ -80,6 +81,7 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ResendEmailConfirmation");
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/LoginWith2fa");
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/AccessDenied");
+    options.Conventions.AllowAnonymousToPage("/Legal/Terms");
 });
 
 var app = builder.Build();

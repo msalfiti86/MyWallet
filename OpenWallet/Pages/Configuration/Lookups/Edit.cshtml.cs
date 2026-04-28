@@ -90,8 +90,6 @@ public class EditModel(UserContext dbContext, IAuditService auditService) : Page
         return RedirectToPage("Index");
     }
 
-    public string T(string key) => SharedText.Get(key, HttpContext);
-
     public class LookupInput
     {
         public Guid Id { get; set; }

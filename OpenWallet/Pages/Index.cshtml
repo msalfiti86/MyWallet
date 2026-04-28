@@ -1,80 +1,80 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = L["Dashboard"];
 }
 
 <section class="page-header">
     <div>
-        <h1>Wallet command center</h1>
-        <p>Monitor organization balance, approvals, suspicious activity, and user wallet operations from one responsive bilingual workspace.</p>
+        <h1>@L["WalletCommandCenter"]</h1>
+        <p>@L["WalletCommandCenterDescription"]</p>
     </div>
-    <a class="btn btn-primary px-4" asp-page="/Transfer/Index"><i class="bi bi-plus-circle"></i> New transfer</a>
+    <a class="btn btn-primary px-4" asp-page="/Transfer/Index"><i class="bi bi-plus-circle"></i> @L["NewTransfer"]</a>
 </section>
 
 <section class="dashboard-grid">
     <article class="wallet-card">
-        <span>Available balance</span>
+        <span>@L["AvailableBalance"]</span>
         <div class="balance" data-counter>SAR 84250</div>
         <div class="wallet-number">OWKSA20260425123456</div>
         <div class="quick-actions">
-            <a asp-page="/Topup/Index"><i class="bi bi-credit-card"></i> Top up</a>
-            <a asp-page="/Transfer/Index"><i class="bi bi-send"></i> Transfer</a>
-            <a asp-page="/Statement/Index"><i class="bi bi-file-earmark-arrow-down"></i> Statement</a>
+            <a asp-page="/Topup/Index"><i class="bi bi-credit-card"></i> @L["TopUp"]</a>
+            <a asp-page="/Transfer/Index"><i class="bi bi-send"></i> @L["Transfer"]</a>
+            <a asp-page="/Statement/Index"><i class="bi bi-file-earmark-arrow-down"></i> @L["Statement"]</a>
         </div>
     </article>
     <article class="panel-card">
-        <h2 class="h5">Approval queue</h2>
-        <p class="text-muted">High-value transfer awaiting FinanceManager review.</p>
+        <h2 class="h5">@L["ApprovalQueue"]</h2>
+        <p class="text-muted">@L["ApprovalQueueDescription"]</p>
         <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
-            <span>Supplier payout</span>
+            <span>@L["SupplierPayout"]</span>
             <strong>SAR 7,413.80</strong>
         </div>
         <div class="d-flex gap-2 mt-4">
-            <button class="btn btn-primary flex-fill">Approve</button>
-            <button class="btn btn-outline-danger flex-fill" data-bs-toggle="modal" data-bs-target="#confirmModal">Reject</button>
+            <button class="btn btn-primary flex-fill">@L["Approve"]</button>
+            <button class="btn btn-outline-danger flex-fill" data-bs-toggle="modal" data-bs-target="#confirmModal">@L["Reject"]</button>
         </div>
     </article>
 </section>
 
 <section class="stats-grid">
-    <partial name="_PremiumStatCard" model='("Total In", "SAR 50000", "bi-arrow-down-circle", "success")' />
-    <partial name="_PremiumStatCard" model='("Total Out", "SAR 8663", "bi-arrow-up-circle", "warning")' />
-    <partial name="_PremiumStatCard" model='("Pending", "3", "bi-hourglass-split", "info")' />
-    <partial name="_PremiumStatCard" model='("Suspicious", "1", "bi-shield-exclamation", "danger")' />
+    <partial name="_PremiumStatCard" model='(L["TotalIn"].Value, "SAR 50000", "bi-arrow-down-circle", "success")' />
+    <partial name="_PremiumStatCard" model='(L["TotalOut"].Value, "SAR 8663", "bi-arrow-up-circle", "warning")' />
+    <partial name="_PremiumStatCard" model='(L["Pending"].Value, "3", "bi-hourglass-split", "info")' />
+    <partial name="_PremiumStatCard" model='(L["Suspicious"].Value, "1", "bi-shield-exclamation", "danger")' />
 </section>
 
 <section class="dashboard-grid">
     <article class="panel-card chart-wrap">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="h5 m-0">Monthly spending</h2>
-            <span class="status-badge status-active">Live</span>
+            <h2 class="h5 m-0">@L["MonthlySpending"]</h2>
+            <span class="status-badge status-active">@L["Live"]</span>
         </div>
         <canvas id="monthlySpendingChart"></canvas>
     </article>
     <article class="panel-card">
-        <h2 class="h5">Compliance signals</h2>
+        <h2 class="h5">@L["ComplianceSignals"]</h2>
         <div class="d-grid gap-3 mt-3">
-            <div class="d-flex justify-content-between"><span>KYC verified</span><strong>92%</strong></div>
-            <div class="d-flex justify-content-between"><span>Suspended orgs</span><strong>2</strong></div>
-            <div class="d-flex justify-content-between"><span>Failed logins today</span><strong>7</strong></div>
-            <div class="d-flex justify-content-between"><span>Webhook failures</span><strong>1</strong></div>
+            <div class="d-flex justify-content-between"><span>@L["KycVerified"]</span><strong>92%</strong></div>
+            <div class="d-flex justify-content-between"><span>@L["SuspendedOrgs"]</span><strong>2</strong></div>
+            <div class="d-flex justify-content-between"><span>@L["FailedLoginsToday"]</span><strong>7</strong></div>
+            <div class="d-flex justify-content-between"><span>@L["WebhookFailures"]</span><strong>1</strong></div>
         </div>
     </article>
 </section>
 
 <section class="table-card mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 m-0">Recent transactions</h2>
-        <a asp-page="/Transactions/Index" class="btn btn-sm btn-outline-secondary">View all</a>
+        <h2 class="h5 m-0">@L["RecentTransactions"]</h2>
+        <a asp-page="/Transactions/Index" class="btn btn-sm btn-outline-secondary">@L["ViewAll"]</a>
     </div>
     <div class="table-responsive">
         <table class="data-table">
-            <thead><tr><th>Transaction</th><th>Type</th><th>Category</th><th>Total</th><th>Status</th><th>Risk</th></tr></thead>
+            <thead><tr><th>@L["Transaction"]</th><th>@L["Type"]</th><th>@L["Category"]</th><th>@L["Total"]</th><th>@L["Status"]</th><th>@L["Risk"]</th></tr></thead>
             <tbody>
-                <tr><td>TXN-20260425-090000-101</td><td>TopUp</td><td>TopUp</td><td>SAR 50,000.00</td><td><partial name="_TransactionStatusBadge" model='"Completed"' /></td><td>Normal</td></tr>
-                <tr><td>TXN-20260425-101500-202</td><td>External transfer</td><td>SupplierPayment</td><td>SAR 7,413.80</td><td><partial name="_TransactionStatusBadge" model='"Pending"' /></td><td>Approval</td></tr>
-                <tr><td>TXN-20260425-121500-303</td><td>Internal transfer</td><td>Business</td><td>SAR 1,250.00</td><td><partial name="_TransactionStatusBadge" model='"Completed"' /></td><td>Normal</td></tr>
+                <tr><td>TXN-20260425-090000-101</td><td>@L["TopUp"]</td><td>@L["TopUp"]</td><td>SAR 50,000.00</td><td><partial name="_TransactionStatusBadge" model='"Completed"' /></td><td>@L["Normal"]</td></tr>
+                <tr><td>TXN-20260425-101500-202</td><td>@L["Transfer"]</td><td>@L["SupplierPayout"]</td><td>SAR 7,413.80</td><td><partial name="_TransactionStatusBadge" model='"Pending"' /></td><td>@L["Approval"]</td></tr>
+                <tr><td>TXN-20260425-121500-303</td><td>@L["Transfer"]</td><td>Business</td><td>SAR 1,250.00</td><td><partial name="_TransactionStatusBadge" model='"Completed"' /></td><td>@L["Normal"]</td></tr>
             </tbody>
         </table>
     </div>

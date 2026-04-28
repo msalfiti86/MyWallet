@@ -46,13 +46,19 @@ builder.Services.AddAuthorization(options =>
     }
 });
 
-builder.Services.AddLocalization();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var cultures = new[] { new CultureInfo("en-US"), new CultureInfo("ar-SA") };
     options.DefaultRequestCulture = new RequestCulture("en-US");
     options.SupportedCultures = cultures;
     options.SupportedUICultures = cultures;
+    options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(context =>
+    {
+        context.Request.Cookies.TryGetValue("openwallet-lang", out var lang);
+        var culture = lang?.StartsWith("ar", StringComparison.OrdinalIgnoreCase) == true ? "ar-SA" : "en-US";
+        return Task.FromResult<ProviderCultureResult?>(new ProviderCultureResult(culture, culture));
+    }));
 });
 
 builder.Services.AddSession();

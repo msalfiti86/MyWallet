@@ -1,28 +1,23 @@
-@{
-    var isArabic = Context.Request.Cookies["openwallet-lang"] == "ar";
-}
 <div class="modal fade" id="otpModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content wallet-modal">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title">@(isArabic ? "التحقق من العملية" : "Action verification")</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@(isArabic ? "إغلاق" : "Close")"></button>
+                <h5 class="modal-title">@L["ActionVerification"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@L["Close"]"></button>
             </div>
             <div class="modal-body otp-modal-body">
                 <div class="otp-hero-icon" aria-hidden="true">
                     <i class="bi bi-shield-check"></i>
                 </div>
-                <h2 class="h4 mb-2">@(isArabic ? "أدخل رمز التحقق" : "Enter verification code")</h2>
-                <p class="otp-copy" data-otp-message>
-                    @(isArabic ? "للمتابعة، أدخل رمز التحقق المرسل إلى بريدك الإلكتروني." : "To continue the current action, enter the OTP sent to your email.")
-                </p>
+                <h2 class="h4 mb-2">@L["EnterVerificationCode"]</h2>
+                <p class="otp-copy" data-otp-message>@L["OtpEmailInstruction"]</p>
                 <input class="form-control otp-input text-center fw-bold" id="otpModalCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="00000" />
-                <div class="form-text mt-2">@(isArabic ? "للاختبار يمكنك استخدام الرمز 00000." : "For testing, you can use bypass code 00000.")</div>
+                <div class="form-text mt-2">@L["OtpBypassHelp"]</div>
                 <div class="text-danger small mt-2 d-none" data-otp-error></div>
             </div>
             <div class="modal-footer border-0 pt-0 justify-content-center">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@(isArabic ? "إلغاء" : "Cancel")</button>
-                <button type="button" class="btn btn-primary" data-otp-confirm>@(isArabic ? "تأكيد ومتابعة" : "Verify and continue")</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@L["Cancel"]</button>
+                <button type="button" class="btn btn-primary" data-otp-confirm>@L["VerifyAndContinue"]</button>
             </div>
         </div>
     </div>

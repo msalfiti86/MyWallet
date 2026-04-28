@@ -4,14 +4,144 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="LanguageSwitch" xml:space="preserve"><value>العربية</value></data>
+  <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Actions" xml:space="preserve"><value>Actions</value></data>
   <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
   <data name="Organizations" xml:space="preserve"><value>Organizations</value></data>
   <data name="Users" xml:space="preserve"><value>Users</value></data>
   <data name="Wallets" xml:space="preserve"><value>Wallets</value></data>
+  <data name="TopUp" xml:space="preserve"><value>Top up</value></data>
+  <data name="Transfer" xml:space="preserve"><value>Transfer</value></data>
   <data name="Transactions" xml:space="preserve"><value>Transactions</value></data>
+  <data name="Statement" xml:space="preserve"><value>Statement</value></data>
   <data name="Beneficiaries" xml:space="preserve"><value>Beneficiaries</value></data>
   <data name="Compliance" xml:space="preserve"><value>Compliance</value></data>
   <data name="Complaints" xml:space="preserve"><value>Complaints</value></data>
   <data name="Settings" xml:space="preserve"><value>Settings</value></data>
-  <data name="Lookups" xml:space="preserve"><value>Lookups</value></data>
+  <data name="ConfigurationLookups" xml:space="preserve"><value>Configuration - Lookups</value></data>
+  <data name="ConfigurationVirtualAccounts" xml:space="preserve"><value>Configuration - Virtual Accounts</value></data>
+  <data name="SystemHealthy" xml:space="preserve"><value>System healthy</value></data>
+  <data name="MockPaymentsEnabled" xml:space="preserve"><value>Mock payments enabled</value></data>
+  <data name="LoginTitle" xml:space="preserve"><value>Log in</value></data>
+  <data name="WelcomeBack" xml:space="preserve"><value>Welcome back</value></data>
+  <data name="LoginDescription" xml:space="preserve"><value>Sign in to manage wallets, approvals, transactions, and compliance workflows.</value></data>
+  <data name="EmailAddress" xml:space="preserve"><value>Email address</value></data>
+  <data name="Password" xml:space="preserve"><value>Password</value></data>
+  <data name="EnterPassword" xml:space="preserve"><value>Enter password</value></data>
+  <data name="RememberMe" xml:space="preserve"><value>Remember me</value></data>
+  <data name="ContinueSecurely" xml:space="preserve"><value>Continue securely</value></data>
+  <data name="ForgotPasswordQuestion" xml:space="preserve"><value>Forgot password?</value></data>
+  <data name="CreateOrganization" xml:space="preserve"><value>Create organization</value></data>
+  <data name="TwoFactorFintechOperations" xml:space="preserve"><value>Two-factor fintech operations</value></data>
+  <data name="LoginHeroDescription" xml:space="preserve"><value>Built for Arabic and English teams, Saudi wallet flows, audit-heavy approvals, and responsive administration.</value></data>
+  <data name="DefaultAdmin" xml:space="preserve"><value>Default admin</value></data>
+  <data name="SeedPassword" xml:space="preserve"><value>Seed password</value></data>
+  <data name="ForgotPasswordTitle" xml:space="preserve"><value>Forgot your password?</value></data>
+  <data name="ForgotPasswordDescription" xml:space="preserve"><value>Enter your registered email and we will send a secure link to reset your password.</value></data>
+  <data name="ForgotPasswordEmailHelp" xml:space="preserve"><value>Use the same email address linked to your OpenWallet account.</value></data>
+  <data name="SendResetLink" xml:space="preserve"><value>Send reset link</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>Back to login</value></data>
+  <data name="SecureAccountRecovery" xml:space="preserve"><value>Secure account recovery</value></data>
+  <data name="SecureAccountRecoveryDescription" xml:space="preserve"><value>We help you recover access without exposing account status or sensitive details.</value></data>
+  <data name="RegisterTitle" xml:space="preserve"><value>Register</value></data>
+  <data name="RegisterHeroTitle" xml:space="preserve"><value>Create an organization wallet workspace</value></data>
+  <data name="RegisterHeroDescription" xml:space="preserve"><value>A guided registration for organization details, manager identity, wallet security, and policy agreement.</value></data>
+  <data name="OrganizationRegistration" xml:space="preserve"><value>Organization registration</value></data>
+  <data name="OrganizationRegistrationDescription" xml:space="preserve"><value>No user can be created without an organization.</value></data>
+  <data name="StepOf3" xml:space="preserve"><value>Step {0} of 3</value></data>
+  <data name="OrganizationInformation" xml:space="preserve"><value>Organization information</value></data>
+  <data name="LegalNameEn" xml:space="preserve"><value>Legal name in English</value></data>
+  <data name="LegalNameAr" xml:space="preserve"><value>Legal name in Arabic</value></data>
+  <data name="ShortName" xml:space="preserve"><value>Short name</value></data>
+  <data name="CommercialRegistrationNumber" xml:space="preserve"><value>Commercial registration number</value></data>
+  <data name="TenDigits" xml:space="preserve"><value>10 digits</value></data>
+  <data name="ManagerInformation" xml:space="preserve"><value>Manager information</value></data>
+  <data name="FirstNameEn" xml:space="preserve"><value>First name in English</value></data>
+  <data name="LastNameEn" xml:space="preserve"><value>Last name in English</value></data>
+  <data name="MobileNumber" xml:space="preserve"><value>Mobile number</value></data>
+  <data name="NationalIdOrIqama" xml:space="preserve"><value>National ID or Iqama</value></data>
+  <data name="NationalIdPlaceholder" xml:space="preserve"><value>10 digits starting with 1 or 2</value></data>
+  <data name="IdType" xml:space="preserve"><value>ID type</value></data>
+  <data name="DateOfBirth" xml:space="preserve"><value>Date of birth</value></data>
+  <data name="City" xml:space="preserve"><value>City</value></data>
+  <data name="PostalCode" xml:space="preserve"><value>Postal code</value></data>
+  <data name="FiveDigits" xml:space="preserve"><value>5 digits</value></data>
+  <data name="SecurityAndAgreement" xml:space="preserve"><value>Security and agreement</value></data>
+  <data name="StrongPasswordPlaceholder" xml:space="preserve"><value>Enter a strong password</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>Confirm password</value></data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve"><value>Re-enter password</value></data>
+  <data name="AcceptTermsPrefix" xml:space="preserve"><value>I accept the OpenWallet KSA</value></data>
+  <data name="TermsPrivacyWalletAgreement" xml:space="preserve"><value>terms, privacy policy, and wallet agreement</value></data>
+  <data name="AcceptTermsSuffix" xml:space="preserve"><value>and consent to audit logging for sensitive actions.</value></data>
+  <data name="Next" xml:space="preserve"><value>Next</value></data>
+  <data name="CreateOrganizationAndManager" xml:space="preserve"><value>Create organization and manager</value></data>
+  <data name="WalletCommandCenter" xml:space="preserve"><value>Wallet command center</value></data>
+  <data name="WalletCommandCenterDescription" xml:space="preserve"><value>Monitor organization balance, approvals, suspicious activity, and user wallet operations from one responsive bilingual workspace.</value></data>
+  <data name="NewTransfer" xml:space="preserve"><value>New transfer</value></data>
+  <data name="AvailableBalance" xml:space="preserve"><value>Available balance</value></data>
+  <data name="ApprovalQueue" xml:space="preserve"><value>Approval queue</value></data>
+  <data name="ApprovalQueueDescription" xml:space="preserve"><value>High-value transfer awaiting FinanceManager review.</value></data>
+  <data name="SupplierPayout" xml:space="preserve"><value>Supplier payout</value></data>
+  <data name="Approve" xml:space="preserve"><value>Approve</value></data>
+  <data name="Reject" xml:space="preserve"><value>Reject</value></data>
+  <data name="TotalIn" xml:space="preserve"><value>Total In</value></data>
+  <data name="TotalOut" xml:space="preserve"><value>Total Out</value></data>
+  <data name="Pending" xml:space="preserve"><value>Pending</value></data>
+  <data name="Suspicious" xml:space="preserve"><value>Suspicious</value></data>
+  <data name="MonthlySpending" xml:space="preserve"><value>Monthly spending</value></data>
+  <data name="Live" xml:space="preserve"><value>Live</value></data>
+  <data name="ComplianceSignals" xml:space="preserve"><value>Compliance signals</value></data>
+  <data name="KycVerified" xml:space="preserve"><value>KYC verified</value></data>
+  <data name="SuspendedOrgs" xml:space="preserve"><value>Suspended orgs</value></data>
+  <data name="FailedLoginsToday" xml:space="preserve"><value>Failed logins today</value></data>
+  <data name="WebhookFailures" xml:space="preserve"><value>Webhook failures</value></data>
+  <data name="RecentTransactions" xml:space="preserve"><value>Recent transactions</value></data>
+  <data name="ViewAll" xml:space="preserve"><value>View all</value></data>
+  <data name="Transaction" xml:space="preserve"><value>Transaction</value></data>
+  <data name="Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Risk" xml:space="preserve"><value>Risk</value></data>
+  <data name="Normal" xml:space="preserve"><value>Normal</value></data>
+  <data name="Approval" xml:space="preserve"><value>Approval</value></data>
+  <data name="Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="Processing" xml:space="preserve"><value>Processing</value></data>
+  <data name="Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Rejected" xml:space="preserve"><value>Rejected</value></data>
+  <data name="Reversed" xml:space="preserve"><value>Reversed</value></data>
+  <data name="Refunded" xml:space="preserve"><value>Refunded</value></data>
+  <data name="OpenWalletMainOrganization" xml:space="preserve"><value>OpenWallet Main Organization</value></data>
+  <data name="Profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="LanguageChip" xml:space="preserve"><value>EN / AR</value></data>
+  <data name="ToggleDarkMode" xml:space="preserve"><value>Toggle dark mode</value></data>
+  <data name="Notifications" xml:space="preserve"><value>Notifications</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="ActionVerification" xml:space="preserve"><value>Action verification</value></data>
+  <data name="EnterVerificationCode" xml:space="preserve"><value>Enter verification code</value></data>
+  <data name="OtpEmailInstruction" xml:space="preserve"><value>To continue the current action, enter the OTP sent to your email.</value></data>
+  <data name="OtpBypassHelp" xml:space="preserve"><value>For testing, you can use bypass code 00000.</value></data>
+  <data name="VerifyAndContinue" xml:space="preserve"><value>Verify and continue</value></data>
+  <data name="ManageLookupText" xml:space="preserve"><value>Manage configurable dropdown values used across wallet screens.</value></data>
+  <data name="NewLookup" xml:space="preserve"><value>New lookup</value></data>
+  <data name="LookupName" xml:space="preserve"><value>Lookup name</value></data>
+  <data name="Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Lookup" xml:space="preserve"><value>Lookup</value></data>
+  <data name="LookupEditText" xml:space="preserve"><value>The header stores the lookup name. Details store code, English value, and Arabic value.</value></data>
+  <data name="LookupDetails" xml:space="preserve"><value>Lookup details</value></data>
+  <data name="AddRow" xml:space="preserve"><value>Add row</value></data>
+  <data name="Code" xml:space="preserve"><value>Code</value></data>
+  <data name="ValueEn" xml:space="preserve"><value>Value EN</value></data>
+  <data name="ValueAr" xml:space="preserve"><value>Value AR</value></data>
+  <data name="Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Description" xml:space="preserve"><value>Description</value></data>
 </root>

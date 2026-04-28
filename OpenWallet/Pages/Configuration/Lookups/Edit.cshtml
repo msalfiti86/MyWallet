@@ -1,56 +1,56 @@
 @page "{id:guid?}"
 @model OpenWallet.Pages.Configuration.Lookups.EditModel
 @{
-    ViewData["Title"] = "Lookup";
+    ViewData["Title"] = L["Lookup"];
 }
 
 <section class="page-header">
     <div>
-        <h1>@Model.T("Lookup")</h1>
-        <p>@Model.T("LookupEditText")</p>
+        <h1>@L["Lookup"]</h1>
+        <p>@L["LookupEditText"]</p>
     </div>
-    <a class="btn btn-outline-secondary" asp-page="Index">@Model.T("Back")</a>
+    <a class="btn btn-outline-secondary" asp-page="Index">@L["Back"]</a>
 </section>
 
 <form method="post" class="panel-card">
     <input asp-for="Input.Id" type="hidden" />
     <div class="row g-3">
         <div class="col-md-6">
-            <label class="form-label" asp-for="Input.Name"></label>
+            <label class="form-label" asp-for="Input.Name">@L["Name"]</label>
             <input class="form-control" asp-for="Input.Name" />
             <span class="text-danger" asp-validation-for="Input.Name"></span>
         </div>
         <div class="col-md-6">
-            <label class="form-label" asp-for="Input.Description"></label>
+            <label class="form-label" asp-for="Input.Description">@L["Description"]</label>
             <input class="form-control" asp-for="Input.Description" />
         </div>
         <div class="col-12">
             <label class="form-check">
                 <input class="form-check-input" asp-for="Input.IsActive" />
-                <span class="form-check-label">@Model.T("Active")</span>
+                <span class="form-check-label">@L["Active"]</span>
             </label>
         </div>
     </div>
 
     <hr />
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h5 m-0">@Model.T("LookupDetails")</h2>
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-add-detail><i class="bi bi-plus"></i> @Model.T("AddRow")</button>
+        <h2 class="h5 m-0">@L["LookupDetails"]</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-add-detail><i class="bi bi-plus"></i> @L["AddRow"]</button>
     </div>
     <div id="detailRows" class="d-grid gap-2">
         @for (var i = 0; i < Model.Input.Details.Count; i++)
         {
             <div class="row g-2 lookup-row">
                 <input asp-for="Input.Details[i].Id" type="hidden" />
-                <div class="col-md-2"><input class="form-control" asp-for="Input.Details[i].Code" placeholder="@Model.T("Code")" /></div>
-                <div class="col-md-4"><input class="form-control" asp-for="Input.Details[i].ValueEn" placeholder="@Model.T("ValueEn")" /></div>
-                <div class="col-md-4"><input class="form-control" asp-for="Input.Details[i].ValueAr" placeholder="@Model.T("ValueAr")" dir="rtl" /></div>
+                <div class="col-md-2"><input class="form-control" asp-for="Input.Details[i].Code" placeholder="@L["Code"]" /></div>
+                <div class="col-md-4"><input class="form-control" asp-for="Input.Details[i].ValueEn" placeholder="@L["ValueEn"]" /></div>
+                <div class="col-md-4"><input class="form-control" asp-for="Input.Details[i].ValueAr" placeholder="@L["ValueAr"]" dir="rtl" /></div>
                 <div class="col-md-1"><input class="form-control" asp-for="Input.Details[i].SortOrder" /></div>
                 <div class="col-md-1 d-flex align-items-center"><input class="form-check-input" asp-for="Input.Details[i].IsActive" /></div>
             </div>
         }
     </div>
-    <button class="btn btn-primary mt-4" type="submit">@Model.T("Save")</button>
+    <button class="btn btn-primary mt-4" type="submit">@L["Save"]</button>
 </form>
 
 @section Scripts {

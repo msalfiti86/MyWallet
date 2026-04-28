@@ -4,14 +4,144 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="LanguageSwitch" xml:space="preserve"><value>English</value></data>
+  <data name="Back" xml:space="preserve"><value>رجوع</value></data>
+  <data name="Cancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Save" xml:space="preserve"><value>حفظ</value></data>
+  <data name="Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Edit" xml:space="preserve"><value>تعديل</value></data>
+  <data name="Active" xml:space="preserve"><value>نشط</value></data>
+  <data name="Inactive" xml:space="preserve"><value>غير نشط</value></data>
+  <data name="Status" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Actions" xml:space="preserve"><value>الإجراءات</value></data>
   <data name="Dashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
-  <data name="Organizations" xml:space="preserve"><value>المنظمات</value></data>
+  <data name="Organizations" xml:space="preserve"><value>المؤسسات</value></data>
   <data name="Users" xml:space="preserve"><value>المستخدمون</value></data>
   <data name="Wallets" xml:space="preserve"><value>المحافظ</value></data>
+  <data name="TopUp" xml:space="preserve"><value>شحن المحفظة</value></data>
+  <data name="Transfer" xml:space="preserve"><value>تحويل</value></data>
   <data name="Transactions" xml:space="preserve"><value>الحركات</value></data>
+  <data name="Statement" xml:space="preserve"><value>كشف الحساب</value></data>
   <data name="Beneficiaries" xml:space="preserve"><value>المستفيدون</value></data>
   <data name="Compliance" xml:space="preserve"><value>الامتثال</value></data>
   <data name="Complaints" xml:space="preserve"><value>الشكاوى</value></data>
   <data name="Settings" xml:space="preserve"><value>الإعدادات</value></data>
-  <data name="Lookups" xml:space="preserve"><value>القوائم المرجعية</value></data>
+  <data name="ConfigurationLookups" xml:space="preserve"><value>التهيئة - القوائم</value></data>
+  <data name="ConfigurationVirtualAccounts" xml:space="preserve"><value>التهيئة - الحسابات الافتراضية</value></data>
+  <data name="SystemHealthy" xml:space="preserve"><value>النظام يعمل</value></data>
+  <data name="MockPaymentsEnabled" xml:space="preserve"><value>المدفوعات التجريبية مفعلة</value></data>
+  <data name="LoginTitle" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="WelcomeBack" xml:space="preserve"><value>مرحباً بعودتك</value></data>
+  <data name="LoginDescription" xml:space="preserve"><value>سجّل الدخول لإدارة المحافظ والموافقات والحركات والامتثال.</value></data>
+  <data name="EmailAddress" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Password" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="EnterPassword" xml:space="preserve"><value>أدخل كلمة المرور</value></data>
+  <data name="RememberMe" xml:space="preserve"><value>تذكرني</value></data>
+  <data name="ContinueSecurely" xml:space="preserve"><value>متابعة آمنة</value></data>
+  <data name="ForgotPasswordQuestion" xml:space="preserve"><value>نسيت كلمة المرور؟</value></data>
+  <data name="CreateOrganization" xml:space="preserve"><value>إنشاء مؤسسة</value></data>
+  <data name="TwoFactorFintechOperations" xml:space="preserve"><value>عمليات مالية بتحقق ثنائي</value></data>
+  <data name="LoginHeroDescription" xml:space="preserve"><value>مصمم لفرق عربية وإنجليزية، وتدفقات محافظ سعودية، وموافقات قابلة للتدقيق.</value></data>
+  <data name="DefaultAdmin" xml:space="preserve"><value>حساب المدير الافتراضي</value></data>
+  <data name="SeedPassword" xml:space="preserve"><value>كلمة مرور تجريبية</value></data>
+  <data name="ForgotPasswordTitle" xml:space="preserve"><value>استعادة كلمة المرور</value></data>
+  <data name="ForgotPasswordDescription" xml:space="preserve"><value>أدخل بريدك الإلكتروني المسجل وسنرسل لك رابطاً آمناً لإعادة تعيين كلمة المرور.</value></data>
+  <data name="ForgotPasswordEmailHelp" xml:space="preserve"><value>استخدم نفس البريد الإلكتروني المرتبط بحساب OpenWallet الخاص بك.</value></data>
+  <data name="SendResetLink" xml:space="preserve"><value>إرسال رابط إعادة التعيين</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>العودة إلى تسجيل الدخول</value></data>
+  <data name="SecureAccountRecovery" xml:space="preserve"><value>استعادة آمنة للحساب</value></data>
+  <data name="SecureAccountRecoveryDescription" xml:space="preserve"><value>سنساعدك على استعادة الوصول بدون كشف حالة الحساب أو تفاصيله.</value></data>
+  <data name="RegisterTitle" xml:space="preserve"><value>تسجيل مؤسسة</value></data>
+  <data name="RegisterHeroTitle" xml:space="preserve"><value>إنشاء مساحة محافظ للمؤسسة</value></data>
+  <data name="RegisterHeroDescription" xml:space="preserve"><value>تسجيل موجه لبيانات المؤسسة وهوية المدير وأمان المحفظة والموافقة على السياسات.</value></data>
+  <data name="OrganizationRegistration" xml:space="preserve"><value>تسجيل المؤسسة</value></data>
+  <data name="OrganizationRegistrationDescription" xml:space="preserve"><value>لا يمكن إنشاء مستخدم بدون مؤسسة.</value></data>
+  <data name="StepOf3" xml:space="preserve"><value>الخطوة {0} من 3</value></data>
+  <data name="OrganizationInformation" xml:space="preserve"><value>معلومات المؤسسة</value></data>
+  <data name="LegalNameEn" xml:space="preserve"><value>الاسم القانوني بالإنجليزية</value></data>
+  <data name="LegalNameAr" xml:space="preserve"><value>الاسم القانوني بالعربية</value></data>
+  <data name="ShortName" xml:space="preserve"><value>الاسم المختصر</value></data>
+  <data name="CommercialRegistrationNumber" xml:space="preserve"><value>رقم السجل التجاري</value></data>
+  <data name="TenDigits" xml:space="preserve"><value>10 أرقام</value></data>
+  <data name="ManagerInformation" xml:space="preserve"><value>معلومات المدير</value></data>
+  <data name="FirstNameEn" xml:space="preserve"><value>الاسم الأول بالإنجليزية</value></data>
+  <data name="LastNameEn" xml:space="preserve"><value>اسم العائلة بالإنجليزية</value></data>
+  <data name="MobileNumber" xml:space="preserve"><value>رقم الجوال</value></data>
+  <data name="NationalIdOrIqama" xml:space="preserve"><value>رقم الهوية أو الإقامة</value></data>
+  <data name="NationalIdPlaceholder" xml:space="preserve"><value>10 أرقام تبدأ بـ 1 أو 2</value></data>
+  <data name="IdType" xml:space="preserve"><value>نوع الهوية</value></data>
+  <data name="DateOfBirth" xml:space="preserve"><value>تاريخ الميلاد</value></data>
+  <data name="City" xml:space="preserve"><value>المدينة</value></data>
+  <data name="PostalCode" xml:space="preserve"><value>الرمز البريدي</value></data>
+  <data name="FiveDigits" xml:space="preserve"><value>5 أرقام</value></data>
+  <data name="SecurityAndAgreement" xml:space="preserve"><value>الأمان والاتفاقية</value></data>
+  <data name="StrongPasswordPlaceholder" xml:space="preserve"><value>أدخل كلمة مرور قوية</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>تأكيد كلمة المرور</value></data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve"><value>أعد إدخال كلمة المرور</value></data>
+  <data name="AcceptTermsPrefix" xml:space="preserve"><value>أوافق على</value></data>
+  <data name="TermsPrivacyWalletAgreement" xml:space="preserve"><value>الشروط وسياسة الخصوصية واتفاقية المحفظة</value></data>
+  <data name="AcceptTermsSuffix" xml:space="preserve"><value>وأوافق على تسجيل التدقيق للعمليات الحساسة.</value></data>
+  <data name="Next" xml:space="preserve"><value>التالي</value></data>
+  <data name="CreateOrganizationAndManager" xml:space="preserve"><value>إنشاء المؤسسة والمدير</value></data>
+  <data name="WalletCommandCenter" xml:space="preserve"><value>مركز إدارة المحفظة</value></data>
+  <data name="WalletCommandCenterDescription" xml:space="preserve"><value>تابع رصيد المؤسسة والموافقات والأنشطة المشبوهة وعمليات المحافظ من مساحة عمل ثنائية اللغة.</value></data>
+  <data name="NewTransfer" xml:space="preserve"><value>تحويل جديد</value></data>
+  <data name="AvailableBalance" xml:space="preserve"><value>الرصيد المتاح</value></data>
+  <data name="ApprovalQueue" xml:space="preserve"><value>قائمة الموافقات</value></data>
+  <data name="ApprovalQueueDescription" xml:space="preserve"><value>تحويل عالي القيمة بانتظار مراجعة مدير المالية.</value></data>
+  <data name="SupplierPayout" xml:space="preserve"><value>دفعة مورد</value></data>
+  <data name="Approve" xml:space="preserve"><value>موافقة</value></data>
+  <data name="Reject" xml:space="preserve"><value>رفض</value></data>
+  <data name="TotalIn" xml:space="preserve"><value>إجمالي الداخل</value></data>
+  <data name="TotalOut" xml:space="preserve"><value>إجمالي الخارج</value></data>
+  <data name="Pending" xml:space="preserve"><value>قيد الانتظار</value></data>
+  <data name="Suspicious" xml:space="preserve"><value>مشبوهة</value></data>
+  <data name="MonthlySpending" xml:space="preserve"><value>الإنفاق الشهري</value></data>
+  <data name="Live" xml:space="preserve"><value>مباشر</value></data>
+  <data name="ComplianceSignals" xml:space="preserve"><value>مؤشرات الامتثال</value></data>
+  <data name="KycVerified" xml:space="preserve"><value>توثيق KYC مكتمل</value></data>
+  <data name="SuspendedOrgs" xml:space="preserve"><value>مؤسسات موقوفة</value></data>
+  <data name="FailedLoginsToday" xml:space="preserve"><value>محاولات دخول فاشلة اليوم</value></data>
+  <data name="WebhookFailures" xml:space="preserve"><value>فشل Webhook</value></data>
+  <data name="RecentTransactions" xml:space="preserve"><value>آخر الحركات</value></data>
+  <data name="ViewAll" xml:space="preserve"><value>عرض الكل</value></data>
+  <data name="Transaction" xml:space="preserve"><value>الحركة</value></data>
+  <data name="Type" xml:space="preserve"><value>النوع</value></data>
+  <data name="Category" xml:space="preserve"><value>التصنيف</value></data>
+  <data name="Total" xml:space="preserve"><value>الإجمالي</value></data>
+  <data name="Risk" xml:space="preserve"><value>المخاطر</value></data>
+  <data name="Normal" xml:space="preserve"><value>طبيعي</value></data>
+  <data name="Approval" xml:space="preserve"><value>موافقة</value></data>
+  <data name="Completed" xml:space="preserve"><value>مكتملة</value></data>
+  <data name="Processing" xml:space="preserve"><value>قيد المعالجة</value></data>
+  <data name="Failed" xml:space="preserve"><value>فشلت</value></data>
+  <data name="Cancelled" xml:space="preserve"><value>ملغاة</value></data>
+  <data name="Rejected" xml:space="preserve"><value>مرفوضة</value></data>
+  <data name="Reversed" xml:space="preserve"><value>معكوسة</value></data>
+  <data name="Refunded" xml:space="preserve"><value>مستردة</value></data>
+  <data name="OpenWalletMainOrganization" xml:space="preserve"><value>المؤسسة الرئيسية للمحفظة المفتوحة</value></data>
+  <data name="Profile" xml:space="preserve"><value>الملف الشخصي</value></data>
+  <data name="Logout" xml:space="preserve"><value>تسجيل الخروج</value></data>
+  <data name="LanguageChip" xml:space="preserve"><value>عربي / English</value></data>
+  <data name="ToggleDarkMode" xml:space="preserve"><value>تبديل الوضع الداكن</value></data>
+  <data name="Notifications" xml:space="preserve"><value>الإشعارات</value></data>
+  <data name="Close" xml:space="preserve"><value>إغلاق</value></data>
+  <data name="ActionVerification" xml:space="preserve"><value>التحقق من العملية</value></data>
+  <data name="EnterVerificationCode" xml:space="preserve"><value>أدخل رمز التحقق</value></data>
+  <data name="OtpEmailInstruction" xml:space="preserve"><value>للمتابعة، أدخل رمز التحقق المرسل إلى بريدك الإلكتروني.</value></data>
+  <data name="OtpBypassHelp" xml:space="preserve"><value>للاختبار يمكنك استخدام الرمز 00000.</value></data>
+  <data name="VerifyAndContinue" xml:space="preserve"><value>تأكيد ومتابعة</value></data>
+  <data name="ManageLookupText" xml:space="preserve"><value>إدارة قيم القوائم المنسدلة المستخدمة في شاشات المحفظة.</value></data>
+  <data name="NewLookup" xml:space="preserve"><value>قائمة جديدة</value></data>
+  <data name="LookupName" xml:space="preserve"><value>اسم القائمة</value></data>
+  <data name="Details" xml:space="preserve"><value>التفاصيل</value></data>
+  <data name="Lookup" xml:space="preserve"><value>قائمة مرجعية</value></data>
+  <data name="LookupEditText" xml:space="preserve"><value>يحتوي الرأس على اسم القائمة، وتحتوي التفاصيل على الكود والقيمة بالإنجليزية والقيمة بالعربية.</value></data>
+  <data name="LookupDetails" xml:space="preserve"><value>تفاصيل القائمة</value></data>
+  <data name="AddRow" xml:space="preserve"><value>إضافة سطر</value></data>
+  <data name="Code" xml:space="preserve"><value>الكود</value></data>
+  <data name="ValueEn" xml:space="preserve"><value>القيمة بالإنجليزية</value></data>
+  <data name="ValueAr" xml:space="preserve"><value>القيمة بالعربية</value></data>
+  <data name="Name" xml:space="preserve"><value>الاسم</value></data>
+  <data name="Description" xml:space="preserve"><value>الوصف</value></data>
 </root>

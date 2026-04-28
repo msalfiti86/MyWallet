@@ -1,19 +1,18 @@
 @page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
-    var ar = Request.Cookies["openwallet-lang"] == "ar";
+    ViewData["Title"] = L["RegisterTitle"];
 }
 
 <section class="auth-shell register-shell">
     <article class="auth-hero">
         <div class="d-flex justify-content-end">
-            <button type="button" class="chip-button" data-wallet-lang><i class="bi bi-translate"></i><span>@(ar ? "English" : "العربية")</span></button>
+            <button type="button" class="chip-button" data-wallet-lang><i class="bi bi-translate"></i><span>@L["LanguageSwitch"]</span></button>
         </div>
         <div>
             <span class="brand-mark"><span class="brand-icon"><i class="bi bi-wallet2"></i></span><span><strong>OpenWallet</strong><small>KSA</small></span></span>
-            <h1 class="display-5 fw-bold mt-5">@(ar ? "إنشاء مساحة محافظ للمؤسسة" : "Create an organization wallet workspace")</h1>
-            <p class="lead mt-3">@(ar ? "تسجيل موجه لبيانات المؤسسة وهوية المدير وأمان المحفظة والموافقة على السياسات." : "A guided registration for organization details, manager identity, wallet security, and policy agreement.")</p>
+            <h1 class="display-5 fw-bold mt-5">@L["RegisterHeroTitle"]</h1>
+            <p class="lead mt-3">@L["RegisterHeroDescription"]</p>
         </div>
         <div class="wizard-steps" data-register-progress><span class="active"></span><span></span><span></span></div>
     </article>
@@ -21,50 +20,95 @@
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h2 class="h4 fw-bold mb-1">@(ar ? "تسجيل المؤسسة" : "Organization registration")</h2>
-                    <p class="text-muted mb-0">@(ar ? "لا يمكن إنشاء مستخدم بدون مؤسسة." : "No user can be created without an organization.")</p>
+                    <h2 class="h4 fw-bold mb-1">@L["OrganizationRegistration"]</h2>
+                    <p class="text-muted mb-0">@L["OrganizationRegistrationDescription"]</p>
                 </div>
-                <span class="status-badge status-active" data-step-label>@(ar ? "الخطوة 1 من 3" : "Step 1 of 3")</span>
+                <span class="status-badge status-active" data-step-label>@L["StepOf3", 1]</span>
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
             <div class="register-step is-active" data-step="1">
-                <h3 class="h6 fw-bold mb-3">@(ar ? "معلومات المؤسسة" : "Organization information")</h3>
+                <h3 class="h6 fw-bold mb-3">@L["OrganizationInformation"]</h3>
                 <div class="row g-3">
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameEn"></label><input asp-for="Input.OrganizationLegalNameEn" class="form-control" maxlength="120" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationLegalNameAr"></label><input asp-for="Input.OrganizationLegalNameAr" class="form-control" maxlength="120" dir="rtl" /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.OrganizationShortName"></label><input asp-for="Input.OrganizationShortName" class="form-control" maxlength="40" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.CommercialRegistrationNumber"></label><input asp-for="Input.CommercialRegistrationNumber" class="form-control" maxlength="10" pattern="\d{10}" required placeholder="10 digits" /></div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.OrganizationLegalNameEn">@L["LegalNameEn"]</label>
+                        <input asp-for="Input.OrganizationLegalNameEn" class="form-control" maxlength="120" required placeholder="Example: OpenWallet Trading" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.OrganizationLegalNameAr">@L["LegalNameAr"]</label>
+                        <input asp-for="Input.OrganizationLegalNameAr" class="form-control" maxlength="120" dir="rtl" placeholder="مثال: شركة المحفظة المفتوحة" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.OrganizationShortName">@L["ShortName"]</label>
+                        <input asp-for="Input.OrganizationShortName" class="form-control" maxlength="40" required placeholder="Example: OpenWallet" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.CommercialRegistrationNumber">@L["CommercialRegistrationNumber"]</label>
+                        <input asp-for="Input.CommercialRegistrationNumber" class="form-control" maxlength="10" pattern="\d{10}" required placeholder="@L["TenDigits"]" />
+                    </div>
                 </div>
             </div>
 
             <div class="register-step" data-step="2">
-                <h3 class="h6 fw-bold mb-3">@(ar ? "معلومات المدير" : "Manager information")</h3>
+                <h3 class="h6 fw-bold mb-3">@L["ManagerInformation"]</h3>
                 <div class="row g-3">
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.FirstNameEn"></label><input asp-for="Input.FirstNameEn" class="form-control" maxlength="60" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.LastNameEn"></label><input asp-for="Input.LastNameEn" class="form-control" maxlength="60" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.Email"></label><input asp-for="Input.Email" class="form-control" autocomplete="username" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.MobileNumber"></label><input asp-for="Input.MobileNumber" class="form-control" maxlength="13" placeholder="+9665XXXXXXXX" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.NationalIdOrIqama"></label><input asp-for="Input.NationalIdOrIqama" class="form-control" maxlength="10" pattern="[12]\d{9}" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.IdType"></label><select asp-for="Input.IdType" asp-items="Model.IdTypes" class="form-select"></select></div>
-                    <div class="col-md-4"><label class="form-label" asp-for="Input.DateOfBirthGregorian"></label><input asp-for="Input.DateOfBirthGregorian" class="form-control" required /></div>
-                    <div class="col-md-4"><label class="form-label" asp-for="Input.City"></label><input asp-for="Input.City" class="form-control" maxlength="80" required /></div>
-                    <div class="col-md-4"><label class="form-label" asp-for="Input.PostalCode"></label><input asp-for="Input.PostalCode" class="form-control" maxlength="5" pattern="\d{5}" required /></div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.FirstNameEn">@L["FirstNameEn"]</label>
+                        <input asp-for="Input.FirstNameEn" class="form-control" maxlength="60" required placeholder="Example: Mohammed" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.LastNameEn">@L["LastNameEn"]</label>
+                        <input asp-for="Input.LastNameEn" class="form-control" maxlength="60" required placeholder="Example: Alharbi" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.Email">@L["EmailAddress"]</label>
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" required placeholder="manager@example.com" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.MobileNumber">@L["MobileNumber"]</label>
+                        <input asp-for="Input.MobileNumber" class="form-control" maxlength="13" placeholder="+9665XXXXXXXX" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.NationalIdOrIqama">@L["NationalIdOrIqama"]</label>
+                        <input asp-for="Input.NationalIdOrIqama" class="form-control" maxlength="10" pattern="[12]\d{9}" required placeholder="@L["NationalIdPlaceholder"]" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.IdType">@L["IdType"]</label>
+                        <select asp-for="Input.IdType" asp-items="Model.IdTypes" class="form-select"></select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" asp-for="Input.DateOfBirthGregorian">@L["DateOfBirth"]</label>
+                        <input asp-for="Input.DateOfBirthGregorian" class="form-control" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" asp-for="Input.City">@L["City"]</label>
+                        <input asp-for="Input.City" class="form-control" maxlength="80" required placeholder="Example: Riyadh" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" asp-for="Input.PostalCode">@L["PostalCode"]</label>
+                        <input asp-for="Input.PostalCode" class="form-control" maxlength="5" pattern="\d{5}" required placeholder="@L["FiveDigits"]" />
+                    </div>
                 </div>
             </div>
 
             <div class="register-step" data-step="3">
-                <h3 class="h6 fw-bold mb-3">@(ar ? "الأمان والاتفاقية" : "Security and agreement")</h3>
+                <h3 class="h6 fw-bold mb-3">@L["SecurityAndAgreement"]</h3>
                 <div class="row g-3">
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.Password"></label><input asp-for="Input.Password" class="form-control" autocomplete="new-password" required /></div>
-                    <div class="col-md-6"><label class="form-label" asp-for="Input.ConfirmPassword"></label><input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" required /></div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.Password">@L["Password"]</label>
+                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" required placeholder="@L["StrongPasswordPlaceholder"]" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" asp-for="Input.ConfirmPassword">@L["ConfirmPassword"]</label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" required placeholder="@L["ConfirmPasswordPlaceholder"]" />
+                    </div>
                     <div class="col-12">
                         <label class="form-check agreement-box">
                             <input class="form-check-input" asp-for="Input.AcceptTerms" required />
                             <span class="form-check-label">
-                                @(ar ? "أوافق على" : "I accept the OpenWallet KSA")
-                                <a asp-page="/Legal/Terms" target="_blank">@(ar ? "الشروط وسياسة الخصوصية واتفاقية المحفظة" : "terms, privacy policy, and wallet agreement")</a>
-                                @(ar ? "وأوافق على تسجيل التدقيق للعمليات الحساسة." : "and consent to audit logging for sensitive actions.")
+                                @L["AcceptTermsPrefix"]
+                                <a asp-page="/Legal/Terms" target="_blank">@L["TermsPrivacyWalletAgreement"]</a>
+                                @L["AcceptTermsSuffix"]
                             </span>
                         </label>
                         <span asp-validation-for="Input.AcceptTerms" class="text-danger"></span>
@@ -73,10 +117,10 @@
             </div>
 
             <div class="d-flex gap-2 mt-4">
-                <a class="btn btn-outline-secondary flex-fill" asp-page="./Login">@(ar ? "إلغاء" : "Cancel")</a>
-                <button class="btn btn-outline-secondary flex-fill" type="button" data-register-prev disabled>@(ar ? "رجوع" : "Back")</button>
-                <button class="btn btn-primary flex-fill" type="button" data-register-next>@(ar ? "التالي" : "Next")</button>
-                <button id="registerSubmit" type="submit" class="btn btn-primary flex-fill d-none">@(ar ? "إنشاء المؤسسة والمدير" : "Create organization and manager")</button>
+                <a class="btn btn-outline-secondary flex-fill" asp-page="./Login">@L["Cancel"]</a>
+                <button class="btn btn-outline-secondary flex-fill" type="button" data-register-prev disabled>@L["Back"]</button>
+                <button class="btn btn-primary flex-fill" type="button" data-register-next>@L["Next"]</button>
+                <button id="registerSubmit" type="submit" class="btn btn-primary flex-fill d-none">@L["CreateOrganizationAndManager"]</button>
             </div>
         </form>
     </article>
@@ -93,13 +137,14 @@
             const next = document.querySelector("[data-register-next]");
             const submit = document.getElementById("registerSubmit");
             const label = document.querySelector("[data-step-label]");
+            const stepTemplate = "@L["StepOf3", "__STEP__"]";
             const show = () => {
                 steps.forEach(s => s.classList.toggle("is-active", Number(s.dataset.step) === step));
                 progress.forEach((p, i) => p.classList.toggle("active", i < step));
                 prev.disabled = step === 1;
                 next.classList.toggle("d-none", step === 3);
                 submit.classList.toggle("d-none", step !== 3);
-                label.textContent = document.documentElement.lang === "ar" ? `الخطوة ${step} من 3` : `Step ${step} of 3`;
+                label.textContent = stepTemplate.replace("__STEP__", step);
             };
             const validCurrent = () => {
                 const current = document.querySelector(`.register-step[data-step="${step}"]`);

@@ -1,4 +1,4 @@
-namespace OpenWallet.Resources;
+namespace OpenWallet;
 
 public class SharedResource
 {

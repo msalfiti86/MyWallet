@@ -36,5 +36,4 @@ public class IndexModel(UserContext dbContext, IAuditService auditService) : Pag
         return RedirectToPage();
     }
 
-    public string T(string key) => SharedText.Get(key, HttpContext);
 }

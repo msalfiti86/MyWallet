@@ -1,27 +1,35 @@
 @page
 @model OpenWallet.Pages.Topup.SimulateModel
 @{
-    ViewData["Title"] = "Simulate top-up";
+    var ar = Request.Cookies["openwallet-lang"] == "ar";
+    ViewData["Title"] = ar ? "محاكاة الشحن" : "Simulate top-up";
 }
 
 <section class="page-header">
     <div>
-        <h1>@Model.Method top-up simulation</h1>
-        <p>Add mock payment information. Nothing is sent to a real gateway and no full card data is stored.</p>
+        <h1>@(ar ? "محاكاة شحن المحفظة" : $"{Model.Method} top-up simulation")</h1>
+        <p>@(ar ? "أدخل بيانات دفع تجريبية. لا يتم إرسال أي بيانات إلى بوابة دفع حقيقية ولا يتم حفظ رقم البطاقة الكامل." : "Add mock payment information. Nothing is sent to a real gateway and no full card data is stored.")</p>
     </div>
-    <a class="btn btn-outline-secondary" asp-page="Index">Back</a>
+    <a class="btn btn-outline-secondary" asp-page="Index">@(ar ? "رجوع" : "Back")</a>
 </section>
 
-<section class="dashboard-grid">
+<section class="dashboard-grid payment-simulation-grid">
     <article class="panel-card">
-        <h2 class="h5">Payment details</h2>
+        <h2 class="h5">@(ar ? "بيانات الدفع" : "Payment details")</h2>
         <form method="post" class="row g-3 mt-1">
             <input type="hidden" asp-for="Input.Amount" />
             <input type="hidden" asp-for="Input.Method" />
             @if (Model.Method == "PayPal")
             {
+                <div class="paypal-panel">
+                    <i class="bi bi-paypal"></i>
+                    <div>
+                        <strong>@(ar ? "دفع PayPal تجريبي" : "Mock PayPal payment")</strong>
+                        <span>@(ar ? "استخدم بريداً إلكترونياً تجريبياً للانتقال إلى محاكاة التفويض." : "Use a test email to continue to the authorization simulation.")</span>
+                    </div>
+                </div>
                 <div class="col-12">
-                    <label class="form-label" asp-for="Input.PayPalEmail"></label>
+                    <label class="form-label" asp-for="Input.PayPalEmail">@(ar ? "بريد PayPal" : "PayPal email")</label>
                     <input class="form-control" asp-for="Input.PayPalEmail" placeholder="payer@example.com" />
                     <span class="text-danger" asp-validation-for="Input.PayPalEmail"></span>
                 </div>
@@ -29,38 +37,120 @@
             else
             {
                 <div class="col-12">
-                    <label class="form-label" asp-for="Input.CardholderName"></label>
-                    <input class="form-control" asp-for="Input.CardholderName" autocomplete="cc-name" />
+                    <label class="form-label" asp-for="Input.CardholderName">@(ar ? "الاسم على البطاقة" : "Name on card")</label>
+                    <input class="form-control" asp-for="Input.CardholderName" autocomplete="cc-name" data-card-name placeholder="MOHAMMED ALI" />
                     <span class="text-danger" asp-validation-for="Input.CardholderName"></span>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label" asp-for="Input.CardNumber"></label>
-                    <input class="form-control" asp-for="Input.CardNumber" maxlength="19" placeholder="4111111111111111" autocomplete="cc-number" />
+                <div class="col-12">
+                    <label class="form-label" asp-for="Input.CardNumber">@(ar ? "رقم البطاقة" : "Card number")</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
+                        <input class="form-control" asp-for="Input.CardNumber" maxlength="19" placeholder="4111 1111 1111 1111" autocomplete="cc-number" inputmode="numeric" data-card-number />
+                    </div>
                     <span class="text-danger" asp-validation-for="Input.CardNumber"></span>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label" asp-for="Input.Expiry"></label>
-                    <input class="form-control" asp-for="Input.Expiry" placeholder="12/29" autocomplete="cc-exp" />
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.Expiry">@(ar ? "تاريخ الانتهاء" : "Expiry date")</label>
+                    <input class="form-control" asp-for="Input.Expiry" placeholder="12/29" autocomplete="cc-exp" inputmode="numeric" data-card-expiry />
                     <span class="text-danger" asp-validation-for="Input.Expiry"></span>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label" asp-for="Input.Cvv"></label>
-                    <input class="form-control" asp-for="Input.Cvv" maxlength="4" autocomplete="cc-csc" />
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Input.Cvv">@(ar ? "رمز الأمان" : "Security code")</label>
+                    <input class="form-control" asp-for="Input.Cvv" maxlength="4" autocomplete="cc-csc" inputmode="numeric" placeholder="123" />
                     <span class="text-danger" asp-validation-for="Input.Cvv"></span>
+                </div>
+                <div class="col-12">
+                    <div class="secure-payment-note">
+                        <i class="bi bi-lock-fill"></i>
+                        <span>@(ar ? "محاكاة آمنة: لن يتم حفظ بيانات البطاقة الكاملة." : "Secure simulation: full card details are never stored.")</span>
+                    </div>
                 </div>
             }
             <div class="col-12">
-                <button class="btn btn-primary w-100 py-3">Next: simulate bank authorization</button>
+                <button class="btn btn-primary w-100 py-3"><i class="bi bi-shield-check"></i> @(ar ? "التالي: محاكاة تفويض البنك" : "Next: simulate bank authorization")</button>
             </div>
         </form>
     </article>
-    <article class="wallet-card">
-        <span>Top-up amount</span>
-        <div class="balance">SAR @Model.Amount.ToString("N2")</div>
-        <p class="mt-4 mb-0">The next screen simulates an issuer/bank authorization response. A transaction is created only after success.</p>
+
+    <article class="payment-preview-panel">
+        @if (Model.Method == "PayPal")
+        {
+            <div class="wallet-card">
+                <span>@(ar ? "مبلغ الشحن" : "Top-up amount")</span>
+                <div class="balance">SAR @Model.Amount.ToString("N2")</div>
+                <p class="mt-4 mb-0">@(ar ? "الشاشة التالية تحاكي استجابة التفويض قبل إنشاء حركة الشحن." : "The next screen simulates an issuer authorization response before creating the top-up transaction.")</p>
+            </div>
+        }
+        else
+        {
+            <div class="real-card-preview" aria-label="Card preview">
+                <div class="card-preview-top">
+                    <span>OpenWallet</span>
+                    <i class="bi bi-wifi"></i>
+                </div>
+                <div class="card-chip-row">
+                    <span class="card-chip"></span>
+                    <span class="card-brand" data-card-brand>VISA</span>
+                </div>
+                <div class="card-preview-number" data-card-number-preview>4111 1111 1111 1111</div>
+                <div class="card-preview-bottom">
+                    <div>
+                        <small>@(ar ? "حامل البطاقة" : "Card holder")</small>
+                        <strong data-card-name-preview>MOHAMMED ALI</strong>
+                    </div>
+                    <div>
+                        <small>@(ar ? "تنتهي" : "Expires")</small>
+                        <strong data-card-expiry-preview>12/29</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-card mt-3">
+                <span class="text-muted">@(ar ? "مبلغ الشحن" : "Top-up amount")</span>
+                <h2 class="mt-2">SAR @Model.Amount.ToString("N2")</h2>
+                <p class="mb-0 text-muted">@(ar ? "بعد نجاح محاكاة التفويض، سيتم إنشاء حركة دائنة في المحفظة." : "After a successful authorization simulation, a credit transaction will be created in the wallet.")</p>
+            </div>
+        }
     </article>
 </section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const numberInput = document.querySelector("[data-card-number]");
+            const nameInput = document.querySelector("[data-card-name]");
+            const expiryInput = document.querySelector("[data-card-expiry]");
+            const numberPreview = document.querySelector("[data-card-number-preview]");
+            const namePreview = document.querySelector("[data-card-name-preview]");
+            const expiryPreview = document.querySelector("[data-card-expiry-preview]");
+            const brandPreview = document.querySelector("[data-card-brand]");
+            if (!numberInput) return;
+
+            const formatNumber = value => value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
+            const formatExpiry = value => {
+                const digits = value.replace(/\D/g, "").slice(0, 4);
+                return digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+            };
+            const brand = value => {
+                const digits = value.replace(/\D/g, "");
+                if (digits.startsWith("5")) return "MC";
+                if (digits.startsWith("4")) return "VISA";
+                if (digits.startsWith("3")) return "AMEX";
+                return "CARD";
+            };
+
+            numberInput.addEventListener("input", () => {
+                numberInput.value = formatNumber(numberInput.value);
+                numberPreview.textContent = numberInput.value || "4111 1111 1111 1111";
+                brandPreview.textContent = brand(numberInput.value);
+            });
+            nameInput.addEventListener("input", () => {
+                namePreview.textContent = (nameInput.value || "MOHAMMED ALI").toUpperCase();
+            });
+            expiryInput.addEventListener("input", () => {
+                expiryInput.value = formatExpiry(expiryInput.value);
+                expiryPreview.textContent = expiryInput.value || "12/29";
+            });
+        })();
+    </script>
 }
